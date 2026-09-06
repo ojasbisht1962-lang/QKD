@@ -44,6 +44,7 @@ from core.hardware import (
     get_available_hardware_backends,
     get_available_simulator_backends,
     run_hardware_teleportation_experiment,
+    fetch_ibm_job_result,
     BUILTIN_IBM_NOISE_MODELS,
 )
 from attacks.replay import compute_digest_hamming_distance
@@ -474,7 +475,7 @@ def _plot_pmf(n: int, p0: float, k_obs: int, alpha_val: float) -> plt.Figure:
     ax.grid(True, linestyle="--", alpha=0.2, color="#A855F7")
     ax.tick_params(colors="#C084FC")
     for spine in ax.spines.values():
-        spine.set_color("rgba(236, 72, 153, 0.3)")
+        spine.set_color((236/255, 72/255, 153/255, 0.3))
     ax.legend(fontsize=8, facecolor="#180B30", edgecolor="#EC4899", labelcolor="#F3E8FF")
     fig.tight_layout()
     return fig
@@ -1108,7 +1109,7 @@ elif nav_section == "Quantum Lab":
             ax_h.grid(True, axis="y", linestyle="--", alpha=0.2, color="#A855F7")
             ax_h.tick_params(colors="#C084FC")
             for spine in ax_h.spines.values():
-                spine.set_color("rgba(236, 72, 153, 0.3)")
+                spine.set_color((236/255, 72/255, 153/255, 0.3))
             fig_h.tight_layout()
             st.pyplot(fig_h)
             plt.close(fig_h)
@@ -1281,13 +1282,18 @@ elif nav_section == "Hardware Validation":
                     st.session_state["IBM_QUANTUM_API_TOKEN"] = token_input.strip()
                     st.session_state["IBM_QUANTUM_INSTANCE_CRN"] = instance_input.strip()
                     st.session_state["IBM_QUANTUM_CHANNEL"] = selected_channel
+                    # Clear all caches: Streamlit cache_data AND module-level IBM service/backend caches
                     _cached_check_hardware.clear()
                     _cached_get_hw_backends.clear()
+                    from core.hardware import _SERVICE_CACHE, _BACKENDS_CACHE
+                    _SERVICE_CACHE.clear()
+                    _BACKENDS_CACHE.clear()
                     is_ok, msg = _cached_check_hardware(token_input.strip(), selected_channel, instance_input.strip())
                     st.session_state["hw_configured_state"] = (is_ok, msg)
                     if is_ok:
                         st.session_state["available_hw_backends"] = _cached_get_hw_backends(token_input.strip(), selected_channel, instance_input.strip())
                 st.rerun()
+
 
     active_token = st.session_state.get("IBM_QUANTUM_API_TOKEN", "").strip() or get_ibm_token() or ""
     active_instance = st.session_state.get("IBM_QUANTUM_INSTANCE_CRN", "").strip() or get_ibm_instance() or ""
@@ -1464,7 +1470,56 @@ elif nav_section == "Hardware Validation":
         m4.metric("Job ID / Execution Type", res["job_id"] if res["job_id"] != "N/A" else res.get("backend_type", "Simulation"))
 
         if not res["success"] and res.get("error_message"):
-            st.warning(f"Notice: {res['error_message']}")
+            job_id_val = res.get("job_id", "N/A")
+            has_valid_job = (
+                job_id_val != "N/A"
+                and len(job_id_val) > 4
+                and not job_id_val.startswith("LOCAL")
+            )
+
+            st.error(
+                f"**Hardware Execution / Network Notice**\n\n"
+                f"**Reason:** {res['error_message']}\n\n"
+                f"Showing ideal simulation baseline analytics below."
+            )
+
+            col_action1, col_action2 = st.columns([1, 1])
+            if has_valid_job:
+                with col_action1:
+                    job_url = f"https://quantum.ibm.com/jobs/{job_id_val}"
+                    st.markdown(
+                        f'👉 <a href="{job_url}" target="_blank" style="color: #60A5FA; font-weight: bold;">Track Job {job_id_val} on IBM Quantum Cloud Dashboard</a>',
+                        unsafe_allow_html=True,
+                    )
+                    if st.button("🔄 Re-query IBM Cloud for Job Result", key="recheck_hw_job_btn"):
+                        with st.spinner(f"Re-querying IBM Cloud for Job ID {job_id_val}..."):
+                            refetched_res = fetch_ibm_job_result(
+                                job_id=job_id_val,
+                                token=active_token,
+                                channel=selected_channel,
+                                instance=active_instance,
+                                state_label=hw_state,
+                                basis=hw_basis,
+                                shots=hw_shots,
+                            )
+                            st.session_state.hw_res = refetched_res
+                            st.rerun()
+
+            with col_action2:
+                if st.button("⚡ Run Instant Offline Noise Sim (fake_fez)", key="fallback_fake_fez_btn"):
+                    with st.spinner("Executing 156-qubit Heron r2 realistic noise model locally..."):
+                        noise_res = run_hardware_teleportation_experiment(
+                            state_label=hw_state,
+                            basis=hw_basis,
+                            backend_name="fake_fez",
+                            shots=hw_shots,
+                            execution_mode="ibm_fake_noise_sim",
+                        )
+                        st.session_state.hw_res = noise_res
+                        st.rerun()
+
+            st.markdown("---")
+
 
         st.subheader("Outcome Distribution: Ideal Aer Simulation vs Target Quantum Backend")
 
@@ -2074,7 +2129,7 @@ elif nav_section == "Analysis":
                 ax_.grid(True, linestyle="--", alpha=0.2, color="#A855F7")
                 ax_.tick_params(colors="#C084FC")
                 for spine in ax_.spines.values():
-                    spine.set_color("rgba(236, 72, 153, 0.3)")
+                    spine.set_color((236/255, 72/255, 153/255, 0.3))
                 ax_.legend(fontsize=8, facecolor="#180B30", edgecolor="#EC4899", labelcolor="#F3E8FF")
 
             axes_bw[0].set_ylabel("Verification Error Rate", color="#E9D5FF")
