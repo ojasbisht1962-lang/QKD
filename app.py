@@ -718,33 +718,657 @@ if nav_section == "Overview":
         unsafe_allow_html=True,
     )
 
-    with st.expander("Interactive Sequence Diagram (Architecture)", expanded=False):
-        st.markdown(
-            """
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Alice as Alice (Signer)
-    participant QC as Quantum Channel (Qiskit Aer / QPU)
-    actor Eve as Eve (Adversary)
-    actor Bob as Bob (Verifier)
+    # ── Interactive Protocol Visualization (replaces static Mermaid) ─────────
+    import streamlit.components.v1 as _stc
+    with st.expander("Live Protocol Visualization (Architecture)", expanded=True):
+        _protocol_html = r"""
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;600;700&display=swap');
 
-    Note over Alice: 1. Compute D = SHA256(M)<br/>2. XOR b_i = d_i ⊕ K_i<br/>3. Basis Schedule i%3
-    Alice->>QC: Prepare |ψ_i⟩ Pauli Eigenstates
-    opt Physical Attack Injected
-        QC->>Eve: Intercept / Bit-Flip / Forgery
-        Eve->>QC: Resend Manipulated State
-    end
-    QC->>Bob: Transmit via 3-Qubit Teleportation
-    Note over Bob: 4. Readout q2 in Basis_i<br/>5. Count Mismatches k<br/>6. Binomial Test p vs α
-    alt p-value ≤ α
-        Bob-->>Alice: REJECT SIGNATURE (THREAT DETECTED)
-    else p-value > α
-        Bob-->>Alice: ACCEPT SIGNATURE (NORMAL CHANNEL)
-    end
-```
-            """
-        )
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #080410;
+    font-family: 'Inter', sans-serif;
+    color: #E9D5FF;
+    padding: 18px 10px 12px 10px;
+  }
+
+  .diagram-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ── Top label row ─────────────────────────────────────────── */
+  .labels-row {
+    display: grid;
+    grid-template-columns: 180px 1fr 160px 1fr 180px;
+    align-items: end;
+    padding-bottom: 6px;
+  }
+  .actor-label {
+    text-align: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 5px 0 2px 0;
+  }
+  .label-alice  { color: #F472B6; }
+  .label-eve    { color: #FBBF24; }
+  .label-bob    { color: #34D399; }
+  .label-center { color: #818CF8; font-size: 0.68rem; letter-spacing: 0.06em; text-align: center; }
+
+  /* ── SVG channel area ──────────────────────────────────────── */
+  .channel-svg-wrap {
+    width: 100%;
+    overflow: visible;
+  }
+
+  /* ── Pipeline details row ──────────────────────────────────── */
+  .pipe-row {
+    display: grid;
+    grid-template-columns: 180px 1fr 160px 1fr 180px;
+    gap: 0;
+    margin-top: 6px;
+    align-items: start;
+  }
+  .pipe-box {
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.74rem;
+    line-height: 1.65;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .pipe-alice {
+    background: rgba(236,72,153,0.10);
+    border: 1px solid rgba(236,72,153,0.35);
+    color: #F9A8D4;
+  }
+  .pipe-eve {
+    background: rgba(251,191,36,0.10);
+    border: 1px solid rgba(251,191,36,0.35);
+    color: #FDE68A;
+    text-align: center;
+  }
+  .pipe-bob {
+    background: rgba(52,211,153,0.10);
+    border: 1px solid rgba(52,211,153,0.35);
+    color: #6EE7B7;
+    text-align: right;
+  }
+  .pipe-spacer { /* empty grid cells */ }
+  .pipe-step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 3px;
+  }
+  .step-num {
+    background: rgba(236,72,153,0.25);
+    color: #F472B6;
+    border-radius: 50%;
+    width: 17px;
+    height: 17px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-num-eve  { background: rgba(251,191,36,0.25); color: #FBBF24; }
+  .step-num-bob  { background: rgba(52,211,153,0.25); color: #34D399; }
+
+  /* ── Decision row ──────────────────────────────────────────── */
+  .decision-row {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+    margin-top: 12px;
+    padding-right: 0;
+  }
+  .decision-box {
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.04em;
+  }
+  .dec-accept {
+    background: rgba(16,185,129,0.12);
+    border: 1.5px solid rgba(16,185,129,0.55);
+    color: #34D399;
+    box-shadow: 0 0 12px rgba(16,185,129,0.15);
+  }
+  .dec-reject {
+    background: rgba(239,68,68,0.12);
+    border: 1.5px solid rgba(239,68,68,0.55);
+    color: #F87171;
+    box-shadow: 0 0 12px rgba(239,68,68,0.12);
+  }
+  .dec-icon { font-size: 1.0rem; }
+
+  /* ── Stage timeline ────────────────────────────────────────── */
+  .timeline {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-top: 14px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 4px 0;
+  }
+  .tl-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 90px;
+    flex: 1;
+    cursor: default;
+  }
+  .tl-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.68rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    border: 2px solid;
+    position: relative;
+    z-index: 2;
+  }
+  .tl-dot-done  { background: rgba(52,211,153,0.2);  border-color: #34D399; color: #34D399; }
+  .tl-dot-idle  { background: rgba(100,100,130,0.12); border-color: #4B5563; color: #6B7280; }
+  .tl-label {
+    font-size: 0.60rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: #9CA3AF;
+    margin-top: 5px;
+    text-align: center;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    line-height: 1.35;
+  }
+  .tl-connector {
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(99,102,241,0.4), rgba(99,102,241,0.15));
+    margin-bottom: 22px;
+    min-width: 8px;
+  }
+
+  /* ── Basis legend ─────────────────────────────────────────── */
+  .basis-legend {
+    display: flex;
+    gap: 14px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .basis-tag {
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+  }
+  .basis-z { background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.4); color: #A5B4FC; }
+  .basis-x { background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.35); color: #7DD3FC; }
+  .basis-y { background: rgba(168,85,247,0.12); border: 1px solid rgba(168,85,247,0.35); color: #D8B4FE; }
+
+  /* ── Packet animation ─────────────────────────────────────── */
+  @keyframes slideRight {
+    0%   { transform: translateX(0px);   opacity: 0.2; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateX(340px); opacity: 0.2; }
+  }
+  @keyframes slideRightFull {
+    0%   { transform: translateX(0px);   opacity: 0.2; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateX(680px); opacity: 0.2; }
+  }
+  .packet-group-direct { animation: slideRightFull 3.8s ease-in-out infinite; }
+  .packet-group-alice  { animation: slideRight 3.8s ease-in-out infinite; }
+  .packet-group-eve    { animation: slideRight 3.8s ease-in-out infinite 1.9s; }
+
+  /* Section divider */
+  .sec-divider {
+    border: none;
+    border-top: 1px solid rgba(168,85,247,0.18);
+    margin: 10px 0;
+  }
+</style>
+</head>
+<body>
+<div class="diagram-wrap">
+
+  <!-- ═══ LABEL ROW ════════════════════════════════════════════════ -->
+  <div class="labels-row">
+    <div class="actor-label label-alice">
+      ⬡ ALICE<br/><span style="font-size:0.62rem;font-weight:400;color:#C084FC;">SIGNER</span>
+    </div>
+    <div class="label-center">
+      ─── QUANTUM CHANNEL (Qiskit Aer / 3-Qubit Teleportation) ───
+    </div>
+    <div class="actor-label label-eve" id="eve-header">
+      ◈ EVE<br/><span style="font-size:0.62rem;font-weight:400;color:#D97706;">ADVERSARY</span>
+    </div>
+    <div class="label-center" id="eve-channel-label">
+      ─── CHANNEL CONTINUATION ───
+    </div>
+    <div class="actor-label label-bob">
+      ⬡ BOB<br/><span style="font-size:0.62rem;font-weight:400;color:#6EE7B7;">VERIFIER</span>
+    </div>
+  </div>
+
+  <!-- ═══ SVG CHANNEL DIAGRAM ═══════════════════════════════════════ -->
+  <div class="channel-svg-wrap">
+  <svg id="channel-svg" viewBox="0 0 960 130" preserveAspectRatio="xMidYMid meet"
+       style="width:100%;height:auto;" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!-- Alice glow -->
+      <filter id="f-alice" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="4" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <!-- Eve glow warning -->
+      <filter id="f-eve" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="5" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <!-- Bob glow -->
+      <filter id="f-bob" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="4" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <!-- Quantum channel gradient -->
+      <linearGradient id="ch-grad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%"   stop-color="#EC4899" stop-opacity="0.6"/>
+        <stop offset="50%"  stop-color="#6366F1" stop-opacity="0.8"/>
+        <stop offset="100%" stop-color="#34D399" stop-opacity="0.6"/>
+      </linearGradient>
+      <!-- Arrow markers -->
+      <marker id="arr-cyan" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0,8 3,0 6" fill="#6366F1"/>
+      </marker>
+      <marker id="arr-red" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0,8 3,0 6" fill="#F87171"/>
+      </marker>
+      <marker id="arr-green" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0,8 3,0 6" fill="#34D399"/>
+      </marker>
+      <marker id="arr-amber" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0,8 3,0 6" fill="#FBBF24"/>
+      </marker>
+      <!-- Packet shapes -->
+      <symbol id="pkt-z" viewBox="-7 -7 14 14">
+        <circle r="6" fill="#6366F1" fill-opacity="0.85"/>
+        <text x="0" y="4" text-anchor="middle" font-size="7" font-family="serif" fill="white">0</text>
+      </symbol>
+      <symbol id="pkt-x" viewBox="-7 -7 14 14">
+        <circle r="6" fill="#38BDF8" fill-opacity="0.85"/>
+        <text x="0" y="4" text-anchor="middle" font-size="7" font-family="serif" fill="white">+</text>
+      </symbol>
+      <symbol id="pkt-y" viewBox="-7 -7 14 14">
+        <circle r="6" fill="#A855F7" fill-opacity="0.85"/>
+        <text x="0" y="4" text-anchor="middle" font-size="6" font-family="serif" fill="white">+i</text>
+      </symbol>
+      <symbol id="pkt-disturbed" viewBox="-7 -7 14 14">
+        <polygon points="0,-7 7,7 -7,7" fill="#F87171" fill-opacity="0.9"/>
+        <text x="0" y="5" text-anchor="middle" font-size="6.5" font-family="serif" fill="white">?</text>
+      </symbol>
+    </defs>
+
+    <!-- ── Alice node box ─────────────────────── -->
+    <rect x="2" y="30" width="130" height="70" rx="8" ry="8"
+          fill="rgba(236,72,153,0.08)" stroke="#EC4899" stroke-width="1.4"
+          filter="url(#f-alice)"/>
+    <text x="67" y="52" text-anchor="middle" font-size="11" font-weight="700"
+          font-family="Inter,sans-serif" fill="#F472B6">ALICE</text>
+    <text x="67" y="66" text-anchor="middle" font-size="8.5"
+          font-family="JetBrains Mono,monospace" fill="#C084FC">SHA-256 → XOR</text>
+    <text x="67" y="78" text-anchor="middle" font-size="8"
+          font-family="JetBrains Mono,monospace" fill="#C084FC">Basis: Z / X / Y</text>
+    <text x="67" y="90" text-anchor="middle" font-size="8"
+          font-family="JetBrains Mono,monospace" fill="#F9A8D4">Prepares |ψᵢ⟩ on q0</text>
+
+    <!-- ── Bob node box ───────────────────────── -->
+    <rect x="828" y="30" width="130" height="70" rx="8" ry="8"
+          fill="rgba(52,211,153,0.07)" stroke="#34D399" stroke-width="1.4"
+          filter="url(#f-bob)"/>
+    <text x="893" y="52" text-anchor="middle" font-size="11" font-weight="700"
+          font-family="Inter,sans-serif" fill="#34D399">BOB</text>
+    <text x="893" y="66" text-anchor="middle" font-size="8.5"
+          font-family="JetBrains Mono,monospace" fill="#6EE7B7">Measure q2 in Bᵢ</text>
+    <text x="893" y="78" text-anchor="middle" font-size="8"
+          font-family="JetBrains Mono,monospace" fill="#6EE7B7">Count errors k</text>
+    <text x="893" y="90" text-anchor="middle" font-size="8"
+          font-family="JetBrains Mono,monospace" fill="#A7F3D0">Binomial test p vs α</text>
+
+    <!-- ══════════════ NO-ATTACK mode (default) ══════════════ -->
+    <g id="g-no-attack">
+      <!-- Full direct channel line -->
+      <line x1="132" y1="65" x2="820" y2="65"
+            stroke="url(#ch-grad)" stroke-width="2.5"
+            stroke-dasharray="none" marker-end="url(#arr-green)"/>
+
+      <!-- Channel label -->
+      <text x="480" y="57" text-anchor="middle" font-size="8.5"
+            font-family="JetBrains Mono,monospace" fill="#818CF8">
+        3-Qubit Teleportation (Bell Pair + Feedforward)
+      </text>
+
+      <!-- Eve inactive box (centred on channel) -->
+      <rect x="420" y="72" width="120" height="36" rx="6"
+            fill="rgba(75,85,99,0.15)" stroke="#4B5563" stroke-width="1"
+            stroke-dasharray="4,3"/>
+      <text x="480" y="87" text-anchor="middle" font-size="8.5" font-weight="700"
+            font-family="Inter,sans-serif" fill="#6B7280">EVE  ·  INACTIVE</text>
+      <text x="480" y="100" text-anchor="middle" font-size="7.5"
+            font-family="JetBrains Mono,monospace" fill="#4B5563">
+        no interception
+      </text>
+
+      <!-- Travelling quantum packets -->
+      <g class="packet-group-direct">
+        <use href="#pkt-z" x="155" y="59" width="14" height="14"/>
+        <use href="#pkt-x" x="175" y="59" width="14" height="14"/>
+        <use href="#pkt-y" x="195" y="59" width="14" height="14"/>
+        <use href="#pkt-z" x="215" y="59" width="14" height="14"/>
+        <use href="#pkt-x" x="235" y="59" width="14" height="14"/>
+      </g>
+    </g>
+
+    <!-- ══════════════ ATTACK mode (hidden by default) ════════ -->
+    <g id="g-attack" style="display:none;">
+      <!-- Alice → Eve segment -->
+      <line x1="132" y1="65" x2="408" y2="65"
+            stroke="#EC4899" stroke-width="2" stroke-dasharray="5,2"
+            marker-end="url(#arr-amber)"/>
+
+      <!-- Eve active node (centred) -->
+      <rect x="410" y="18" width="140" height="95" rx="8"
+            fill="rgba(251,191,36,0.10)" stroke="#FBBF24" stroke-width="1.8"
+            filter="url(#f-eve)"/>
+      <!-- Warning glow ring -->
+      <rect x="407" y="15" width="146" height="101" rx="10"
+            fill="none" stroke="rgba(251,191,36,0.25)" stroke-width="3"/>
+      <text x="480" y="36" text-anchor="middle" font-size="10.5" font-weight="700"
+            font-family="Inter,sans-serif" fill="#FBBF24">◈ EVE  ACTIVE</text>
+      <text x="480" y="50" text-anchor="middle" font-size="7.5"
+            font-family="JetBrains Mono,monospace" fill="#FDE68A">Intercept |ψᵢ⟩</text>
+      <text x="480" y="62" text-anchor="middle" font-size="7.5"
+            font-family="JetBrains Mono,monospace" fill="#FDE68A">Measure in B_Eve</text>
+      <text x="480" y="74" text-anchor="middle" font-size="7.5"
+            font-family="JetBrains Mono,monospace" fill="#FDE68A">State collapse</text>
+      <text x="480" y="86" text-anchor="middle" font-size="7.5"
+            font-family="JetBrains Mono,monospace" fill="#F87171">Resend disturbed</text>
+      <text x="480" y="100" text-anchor="middle" font-size="7"
+            font-family="JetBrains Mono,monospace" fill="#D97706">
+        P(error) ≈ 1/3  (random basis)
+      </text>
+
+      <!-- Eve → Bob segment -->
+      <line x1="550" y1="65" x2="820" y2="65"
+            stroke="#F87171" stroke-width="2" stroke-dasharray="5,2"
+            marker-end="url(#arr-red)"/>
+
+      <!-- Packets: Alice side -->
+      <g class="packet-group-alice">
+        <use href="#pkt-z" x="155" y="59" width="14" height="14"/>
+        <use href="#pkt-x" x="175" y="59" width="14" height="14"/>
+        <use href="#pkt-y" x="195" y="59" width="14" height="14"/>
+      </g>
+      <!-- Disturbed packets: Eve side -->
+      <g class="packet-group-eve">
+        <use href="#pkt-disturbed" x="558" y="59" width="14" height="14"/>
+        <use href="#pkt-z"         x="578" y="59" width="14" height="14"/>
+        <use href="#pkt-disturbed" x="598" y="59" width="14" height="14"/>
+      </g>
+    </g>
+
+  </svg>
+  </div>
+
+  <!-- ═══ PIPELINE DETAILS ════════════════════════════════════════ -->
+  <div class="pipe-row">
+    <!-- Alice pipeline -->
+    <div class="pipe-box pipe-alice">
+      <div style="font-weight:700;color:#F472B6;margin-bottom:6px;font-size:0.78rem;">
+        ALICE  ·  CLASSICAL DOMAIN
+      </div>
+      <div class="pipe-step"><span class="step-num">1</span> M → SHA-256(M) = D</div>
+      <div class="pipe-step"><span class="step-num">2</span> bᵢ = dᵢ ⊕ Kᵢ</div>
+      <div class="pipe-step"><span class="step-num">3</span> Basis: i mod 3 → Z/X/Y</div>
+      <div class="pipe-step"><span class="step-num">4</span> Prepare |ψᵢ⟩ on q0</div>
+      <div class="pipe-step"><span class="step-num">5</span> Bell pair (q1,q2) + CNOT</div>
+    </div>
+
+    <div class="pipe-spacer"></div>
+
+    <!-- Eve pipeline (toggles) -->
+    <div class="pipe-box pipe-eve" id="pipe-eve-box">
+      <div style="font-weight:700;color:#FBBF24;margin-bottom:6px;font-size:0.78rem;">
+        EVE  ·  ADVERSARY
+      </div>
+      <div id="eve-inactive-pipe">
+        <div style="color:#6B7280;font-size:0.72rem;">No interception.<br/>Channel intact.</div>
+      </div>
+      <div id="eve-active-pipe" style="display:none;">
+        <div class="pipe-step"><span class="step-num step-num-eve">1</span> Intercept |ψᵢ⟩</div>
+        <div class="pipe-step"><span class="step-num step-num-eve">2</span> Measure (B_Eve)</div>
+        <div class="pipe-step"><span class="step-num step-num-eve">3</span> Collapse → eigenstate</div>
+        <div class="pipe-step"><span class="step-num step-num-eve">4</span> Resend disturbed state</div>
+        <div style="margin-top:4px;font-size:0.68rem;color:#D97706;">
+          2/3 chance of basis mismatch<br/>→ ~1/3 error rate (theoretical)
+        </div>
+      </div>
+    </div>
+
+    <div class="pipe-spacer"></div>
+
+    <!-- Bob pipeline -->
+    <div class="pipe-box pipe-bob">
+      <div style="font-weight:700;color:#34D399;margin-bottom:6px;font-size:0.78rem;text-align:right;">
+        BOB  ·  VERIFIER
+      </div>
+      <div class="pipe-step" style="justify-content:flex-end;">
+        Apply X^c1·Z^c0 on q2 <span class="step-num step-num-bob" style="margin-left:6px;">1</span>
+      </div>
+      <div class="pipe-step" style="justify-content:flex-end;">
+        Rotate q2 to Basisᵢ <span class="step-num step-num-bob" style="margin-left:6px;">2</span>
+      </div>
+      <div class="pipe-step" style="justify-content:flex-end;">
+        Measure → c2 <span class="step-num step-num-bob" style="margin-left:6px;">3</span>
+      </div>
+      <div class="pipe-step" style="justify-content:flex-end;">
+        Count errors k / n <span class="step-num step-num-bob" style="margin-left:6px;">4</span>
+      </div>
+      <div class="pipe-step" style="justify-content:flex-end;">
+        P(K≥k | n,p₀) vs α <span class="step-num step-num-bob" style="margin-left:6px;">5</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sec-divider"/>
+
+  <!-- ═══ INTERACTIVE TOGGLE ════════════════════════════════════ -->
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
+    <span style="font-size:0.78rem;font-family:'JetBrains Mono',monospace;color:#9CA3AF;letter-spacing:0.05em;">
+      ATTACK MODE:
+    </span>
+    <button onclick="toggleAttack(false)"
+            id="btn-no"
+            style="padding:5px 16px;border-radius:6px;border:1.5px solid #34D399;
+                   background:rgba(52,211,153,0.15);color:#34D399;font-family:'JetBrains Mono',monospace;
+                   font-size:0.72rem;font-weight:700;cursor:pointer;letter-spacing:0.05em;">
+      NO ATTACK
+    </button>
+    <button onclick="toggleAttack(true)"
+            id="btn-attack"
+            style="padding:5px 16px;border-radius:6px;border:1.5px solid #4B5563;
+                   background:rgba(75,85,99,0.08);color:#6B7280;font-family:'JetBrains Mono',monospace;
+                   font-size:0.72rem;font-weight:700;cursor:pointer;letter-spacing:0.05em;">
+      INTERCEPT-RESEND
+    </button>
+    <span style="font-size:0.70rem;color:#6B7280;font-family:'JetBrains Mono',monospace;margin-left:4px;">
+      (toggle to preview diagram states)
+    </span>
+  </div>
+
+  <!-- ═══ DECISION OUTCOME ════════════════════════════════════════ -->
+  <div class="decision-row">
+    <div class="decision-box dec-accept">
+      <span class="dec-icon">✓</span>
+      <div>
+        <div>p-value &gt; α</div>
+        <div style="font-size:0.65rem;font-weight:400;letter-spacing:0.02em;margin-top:1px;">
+          FAIL TO REJECT H₀ → ACCEPT SIGNATURE
+        </div>
+      </div>
+    </div>
+    <div class="decision-box dec-reject">
+      <span class="dec-icon">⚠</span>
+      <div>
+        <div>p-value ≤ α</div>
+        <div style="font-size:0.65rem;font-weight:400;letter-spacing:0.02em;margin-top:1px;">
+          REJECT H₀ → THREAT DETECTED / REJECT
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sec-divider"/>
+
+  <!-- ═══ PROTOCOL TIMELINE ══════════════════════════════════════ -->
+  <div style="font-size:0.68rem;font-family:'JetBrains Mono',monospace;color:#6B7280;
+              letter-spacing:0.09em;margin-bottom:6px;text-transform:uppercase;">
+    Protocol Execution Stages
+  </div>
+  <div class="timeline">
+    <div class="tl-stage">
+      <div class="tl-dot tl-dot-done">✓</div>
+      <div class="tl-label">MSG<br/>Input</div>
+    </div>
+    <div class="tl-connector"></div>
+    <div class="tl-stage">
+      <div class="tl-dot tl-dot-done">✓</div>
+      <div class="tl-label">SHA-256<br/>Hash</div>
+    </div>
+    <div class="tl-connector"></div>
+    <div class="tl-stage">
+      <div class="tl-dot tl-dot-done">✓</div>
+      <div class="tl-label">State<br/>Prepare</div>
+    </div>
+    <div class="tl-connector"></div>
+    <div class="tl-stage">
+      <div class="tl-dot tl-dot-done">✓</div>
+      <div class="tl-label">Transmit<br/>(Bell)</div>
+    </div>
+    <div class="tl-connector"></div>
+    <div class="tl-stage" id="tl-eve">
+      <div class="tl-dot tl-dot-idle" id="tl-eve-dot">○</div>
+      <div class="tl-label">Eve<br/>Interact</div>
+    </div>
+    <div class="tl-connector"></div>
+    <div class="tl-stage">
+      <div class="tl-dot tl-dot-done">✓</div>
+      <div class="tl-label">Bob<br/>Measure</div>
+    </div>
+    <div class="tl-connector"></div>
+    <div class="tl-stage">
+      <div class="tl-dot tl-dot-done">✓</div>
+      <div class="tl-label">Binomial<br/>Verify</div>
+    </div>
+    <div class="tl-connector"></div>
+    <div class="tl-stage">
+      <div class="tl-dot tl-dot-done">✓</div>
+      <div class="tl-label">Security<br/>Decision</div>
+    </div>
+  </div>
+
+  <hr class="sec-divider"/>
+
+  <!-- ═══ BASIS LEGEND ═══════════════════════════════════════════ -->
+  <div style="font-size:0.68rem;font-family:'JetBrains Mono',monospace;color:#6B7280;
+              letter-spacing:0.09em;margin-bottom:6px;text-transform:uppercase;">
+    Pauli Eigenstate Encoding
+  </div>
+  <div class="basis-legend">
+    <div class="basis-tag basis-z">Z-Basis (i mod 3 = 0) &nbsp;·&nbsp; |0⟩ (+1) &nbsp; |1⟩ (−1)</div>
+    <div class="basis-tag basis-x">X-Basis (i mod 3 = 1) &nbsp;·&nbsp; |+⟩ (+1) &nbsp; |−⟩ (−1)</div>
+    <div class="basis-tag basis-y">Y-Basis (i mod 3 = 2) &nbsp;·&nbsp; |+i⟩ (+1) &nbsp; |−i⟩ (−1)</div>
+  </div>
+
+</div><!-- /diagram-wrap -->
+
+<script>
+function toggleAttack(active) {
+  var gNone   = document.getElementById('g-no-attack');
+  var gAtk    = document.getElementById('g-attack');
+  var ePipe   = document.getElementById('eve-active-pipe');
+  var ePipeNo = document.getElementById('eve-inactive-pipe');
+  var eveDot  = document.getElementById('tl-eve-dot');
+  var btnNo   = document.getElementById('btn-no');
+  var btnAtk  = document.getElementById('btn-attack');
+  var pipeEve = document.getElementById('pipe-eve-box');
+
+  if (active) {
+    gNone.style.display   = 'none';
+    gAtk.style.display    = '';
+    ePipeNo.style.display = 'none';
+    ePipe.style.display   = '';
+    eveDot.textContent    = '!';
+    eveDot.className      = 'tl-dot';
+    eveDot.style.cssText  = 'background:rgba(251,191,36,0.25);border-color:#FBBF24;color:#FBBF24;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700;border:2px solid;';
+    pipeEve.style.borderColor = 'rgba(251,191,36,0.55)';
+    pipeEve.style.background  = 'rgba(251,191,36,0.10)';
+
+    btnAtk.style.border     = '1.5px solid #FBBF24';
+    btnAtk.style.background = 'rgba(251,191,36,0.15)';
+    btnAtk.style.color      = '#FBBF24';
+    btnNo.style.border      = '1.5px solid #4B5563';
+    btnNo.style.background  = 'rgba(75,85,99,0.08)';
+    btnNo.style.color       = '#6B7280';
+  } else {
+    gNone.style.display   = '';
+    gAtk.style.display    = 'none';
+    ePipeNo.style.display = '';
+    ePipe.style.display   = 'none';
+    eveDot.textContent    = '○';
+    eveDot.className      = 'tl-dot tl-dot-idle';
+    eveDot.style.cssText  = '';
+    pipeEve.style.borderColor = 'rgba(251,191,36,0.35)';
+    pipeEve.style.background  = 'rgba(251,191,36,0.10)';
+
+    btnNo.style.border      = '1.5px solid #34D399';
+    btnNo.style.background  = 'rgba(52,211,153,0.15)';
+    btnNo.style.color       = '#34D399';
+    btnAtk.style.border     = '1.5px solid #4B5563';
+    btnAtk.style.background = 'rgba(75,85,99,0.08)';
+    btnAtk.style.color      = '#6B7280';
+  }
+}
+</script>
+</body>
+</html>
+"""
+        _stc.html(_protocol_html, height=740, scrolling=False)
+
 
     st.markdown("---")
     st.header("Protocol Status Panel")
