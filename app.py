@@ -750,7 +750,7 @@ if nav_section == "Overview":
   /* ── Top label row ─────────────────────────────────────────── */
   .labels-row {
     display: grid;
-    grid-template-columns: 132px 1fr 140px 1fr 132px;
+    grid-template-columns: 180px 1fr 160px 1fr 180px;
     align-items: end;
     padding-bottom: 6px;
   }
@@ -762,9 +762,9 @@ if nav_section == "Overview":
     text-transform: uppercase;
     padding: 5px 0 2px 0;
   }
-  .label-alice  { color: #F472B6; }
-  .label-eve    { color: #FBBF24; }
-  .label-bob    { color: #34D399; }
+  .label-alice  { color: #F472B6; text-align: left; padding-left: 6px; }
+  .label-eve    { color: #FBBF24; text-align: center; }
+  .label-bob    { color: #34D399; text-align: right; padding-right: 6px; }
   .label-center { color: #818CF8; font-size: 0.68rem; letter-spacing: 0.06em; text-align: center; }
 
   /* ── SVG channel area ──────────────────────────────────────── */
@@ -776,7 +776,7 @@ if nav_section == "Overview":
   /* ── Pipeline details row ──────────────────────────────────── */
   .pipe-row {
     display: grid;
-    grid-template-columns: 132px 1fr 140px 1fr 132px;
+    grid-template-columns: 240px 1fr 180px 1fr 240px;
     gap: 0;
     margin-top: 6px;
     align-items: start;
@@ -933,13 +933,13 @@ if nav_section == "Overview":
     0%   { transform: translateX(0px);   opacity: 0.2; }
     10%  { opacity: 1; }
     90%  { opacity: 1; }
-    100% { transform: translateX(340px); opacity: 0.2; }
+    100% { transform: translateX(250px); opacity: 0.2; }
   }
   @keyframes slideRightFull {
     0%   { transform: translateX(0px);   opacity: 0.2; }
     10%  { opacity: 1; }
     90%  { opacity: 1; }
-    100% { transform: translateX(680px); opacity: 0.2; }
+    100% { transform: translateX(640px); opacity: 0.2; }
   }
   .packet-group-direct { animation: slideRightFull 3.8s ease-in-out infinite; }
   .packet-group-alice  { animation: slideRight 3.8s ease-in-out infinite; }
@@ -1367,7 +1367,7 @@ function toggleAttack(active) {
 </body>
 </html>
 """
-        _stc.html(_protocol_html, height=820, scrolling=False)
+        _stc.html(_protocol_html, height=900, scrolling=False)
 
 
     st.markdown("---")
