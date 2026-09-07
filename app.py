@@ -681,7 +681,7 @@ if nav_section == "Overview":
             <h4 style="color: #F472B6; font-family: 'Outfit', sans-serif; margin: 0 0 10px 0; font-size: 1.1rem;">Classical Preprocessing</h4>
             <div style="font-size: 0.86rem; color: #E9D5FF; line-height: 1.6;">
               <p style="margin: 6px 0;"><strong>Step 1: Hash Generation</strong><br>Message <code>M</code> &rarr; <code>D = SHA-256(M)</code> (256 bits)</p>
-              <p style="margin: 6px 0;"><strong>Step 2: XOR Key Encoding</strong><br><code>b_i = d_i &oplus; K_i</code> for <code>i &in; 0..255</code></p>
+              <p style="margin: 6px 0;"><strong>Step 2: XOR Key Encoding</strong><br><code>b<sub>i</sub> = d<sub>i</sub> &oplus; K<sub>i</sub></code> for <code>i &in; 0..255</code></p>
               <p style="margin: 6px 0;"><strong>Step 3: Basis Schedule</strong><br><code>i mod 3 = 0 &rarr; Z</code> | <code>1 &rarr; X</code> | <code>2 &rarr; Y</code></p>
             </div>
           </div>
@@ -694,8 +694,8 @@ if nav_section == "Overview":
             </div>
             <h4 style="color: #C084FC; font-family: 'Outfit', sans-serif; margin: 0 0 10px 0; font-size: 1.1rem;">Quantum Transmission</h4>
             <div style="font-size: 0.86rem; color: #E9D5FF; line-height: 1.6;">
-              <p style="margin: 6px 0;"><strong>Step 4: State Preparation</strong><br>Prepare <code>|&psi;_i&rang;</code> Pauli eigenstate from <code>(b_i, Basis_i)</code></p>
-              <p style="margin: 6px 0;"><strong>Step 5: 3-Qubit Teleportation</strong><br>Bell measurement <code>(c0, c1)</code> + Feedforward <code>X^{c1}Z^{c0}</code></p>
+              <p style="margin: 6px 0;"><strong>Step 4: State Preparation</strong><br>Prepare <code>|&psi;<sub>i</sub>&rang;</code> Pauli eigenstate from <code>(b<sub>i</sub>, Basis<sub>i</sub>)</code></p>
+              <p style="margin: 6px 0;"><strong>Step 5: 3-Qubit Teleportation</strong><br>Bell measurement <code>(c0, c1)</code> + Feedforward <code>X<sup>c1</sup>Z<sup>c0</sup></code></p>
               <p style="margin: 6px 0; color: #FF70A6;"><strong>[Adversarial Insertion Point]</strong><br>Eve operates between Alice & Bob</p>
             </div>
           </div>
@@ -708,9 +708,9 @@ if nav_section == "Overview":
             </div>
             <h4 style="color: #34D399; font-family: 'Outfit', sans-serif; margin: 0 0 10px 0; font-size: 1.1rem;">Statistical Detection</h4>
             <div style="font-size: 0.86rem; color: #E9D5FF; line-height: 1.6;">
-              <p style="margin: 6px 0;"><strong>Step 6: Qubit Readout</strong><br>Bob measures <code>q2</code> in basis <code>Basis_i</code></p>
+              <p style="margin: 6px 0;"><strong>Step 6: Qubit Readout</strong><br>Bob measures <code>q2</code> in basis <code>Basis<sub>i</sub></code></p>
               <p style="margin: 6px 0;"><strong>Step 7: Mismatch Error Count</strong><br>Count positions <code>k</code> where outcome &ne; expected</p>
-              <p style="margin: 6px 0;"><strong>Step 8: Binomial Test</strong><br>Calculate <code>p = P(K &ge; k | n, p0)</code> vs <code>&alpha;</code></p>
+              <p style="margin: 6px 0;"><strong>Step 8: Binomial Test</strong><br>Calculate <code>p = P(K &ge; k | n, p<sub>0</sub>)</code> vs <code>&alpha;</code></p>
             </div>
           </div>
         </div>
@@ -1450,22 +1450,22 @@ elif nav_section == "Protocol":
                 </div>
                 <div style="font-size: 0.85rem; color: #E9D5FF; line-height: 1.6;">
                   • <strong>Message M</strong> &rarr; <code>SHA-256(M)</code> = 256-bit Digest <code>D</code><br>
-                  • <strong>Secret Key K</strong> &rarr; Compute <code>b_i = d_i &oplus; K_i</code><br>
+                  • <strong>Secret Key K</strong> &rarr; Compute <code>b<sub>i</sub> = d<sub>i</sub> &oplus; K<sub>i</sub></code><br>
                   • <strong>Basis Schedule</strong> &rarr; <code>Z</code> (0), <code>X</code> (1), <code>Y</code> (2)<br>
-                  • <strong>Prepare State</strong> &rarr; <code>|&psi;_i&rang;</code> on qubit <code>q0</code>
+                  • <strong>Prepare State</strong> &rarr; <code>|&psi;<sub>i</sub>&rang;</code> on qubit <code>q0</code>
                 </div>
               </div>
 
               <!-- Channel Card -->
               <div style="background: rgba(22, 10, 42, 0.85); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 10px; padding: 18px;">
                 <div style="color: #C084FC; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.05rem; margin-bottom: 10px; border-bottom: 1px solid rgba(168, 85, 247, 0.2); padding-bottom: 6px;">
-                  QUANTUM CHANNEL & EVE
+                  QUANTUM CHANNEL &amp; EVE
                 </div>
                 <div style="font-size: 0.85rem; color: #E9D5FF; line-height: 1.6;">
                   • <code>q0</code>: Alice Signature Qubit<br>
                   • <code>(q1, q2)</code>: EPR Bell Pair (<code>H(q1) + CNOT(q1&rarr;q2)</code>)<br>
                   • <strong>Bell Measurement</strong>: <code>CNOT(q0&rarr;q1) + H(q0)</code> &rarr; <code>c0, c1</code><br>
-                  • <span style="color: #FF70A6;"><strong>[ATTACK POINT]</strong> Eve operates between transmission & readout</span>
+                  • <span style="color: #FF70A6;"><strong>[ATTACK POINT]</strong> Eve operates between transmission &amp; readout</span>
                 </div>
               </div>
 
@@ -1476,9 +1476,9 @@ elif nav_section == "Protocol":
                 </div>
                 <div style="font-size: 0.85rem; color: #E9D5FF; line-height: 1.6;">
                   • <strong>Corrections</strong>: Apply <code>X(q2)</code> if <code>c1=1</code>, <code>Z(q2)</code> if <code>c0=1</code><br>
-                  • <strong>Readout</strong>: Rotate <code>q2</code> to <code>Basis_i</code> & measure <code>c2</code><br>
+                  • <strong>Readout</strong>: Rotate <code>q2</code> to <code>Basis<sub>i</sub></code> &amp; measure <code>c2</code><br>
                   • <strong>Mismatch Check</strong>: Compare outcome to expected eigenvalue<br>
-                  • <strong>Decision</strong>: Reject if <code>P(K &ge; k | n, p0) &le; &alpha;</code>
+                  • <strong>Decision</strong>: Reject if <code>P(K &ge; k | n, p<sub>0</sub>) &le; &alpha;</code>
                 </div>
               </div>
             </div>
@@ -2171,7 +2171,7 @@ elif nav_section == "Hardware Validation":
         ax_hw_bar.set_xticks(x_indices)
         ax_hw_bar.set_xticklabels([f"|{out}⟩" for out in all_outcomes], color="#E9D5FF", fontsize=9)
         ax_hw_bar.set_ylabel("Readout Probability (%)", color="#E9D5FF", fontsize=9)
-        ax_hw_bar.set_title(f"Quantum Teleportation Measurement Distribution (|ψ_i⟩ = {hw_state}, Basis = {hw_basis})", color="#FF70A6", fontsize=10, fontweight="bold")
+        ax_hw_bar.set_title(f"Quantum Teleportation Measurement Distribution (|ψᵢ⟩ = {hw_state}, Basis = {hw_basis})", color="#FF70A6", fontsize=10, fontweight="bold")
         ax_hw_bar.tick_params(colors="#C084FC")
         ax_hw_bar.grid(True, linestyle="--", alpha=0.2, color="#A855F7")
         for spine in ax_hw_bar.spines.values():
@@ -2260,13 +2260,13 @@ elif nav_section == "Security Lab":
             "- Message M: UNKNOWN\n"
             "- SHA-256 Digest D: UNKNOWN\n"
             "- Secret Shared Key K: UNKNOWN\n"
-            "- Basis Schedule B_i: UNKNOWN"
+            "- Basis Schedule Bᵢ: UNKNOWN"
         )
 
         st.markdown('<div class="sec-header">C. ATTACKER ACTION</div>', unsafe_allow_html=True)
         st.markdown(
-            "For each transmitted signature qubit position i, Eve applies a Pauli-X gate on q2 with probability p_attack. "
-            "With probability (1 - p_attack), the qubit passes uncorrupted."
+            "For each transmitted signature qubit position i, Eve applies a Pauli-X gate on q2 with probability $p_{\\text{atk}}$. "
+            "With probability $(1 - p_{\\text{atk}})$, the qubit passes uncorrupted."
         )
 
         st.markdown('<div class="sec-header">D. QUANTUM STATE / BIT TRANSFORMATION</div>', unsafe_allow_html=True)
@@ -2290,7 +2290,7 @@ elif nav_section == "Security Lab":
             # Section F: Circuit Comparison
             st.markdown('<div class="sec-header">F. QUANTUM CIRCUIT / CIRCUIT DIFFERENCE</div>', unsafe_allow_html=True)
             st.markdown(
-                "Modified operation: Injected Pauli-X gate on q2 with probability p_attack before Bob's basis readout."
+                "Modified operation: Injected Pauli-X gate on q2 with probability $p_{\\text{atk}}$ before Bob's basis readout."
             )
             circ_c1, circ_c2 = st.columns(2)
             qc_norm_ch = build_demonstration_teleportation_circuit("|+>", "X", "none")
@@ -2354,8 +2354,8 @@ elif nav_section == "Security Lab":
         st.markdown(
             "- Message M: KNOWN\n"
             "- SHA-256 Digest D = SHA-256(M): KNOWN\n"
-            "- Basis Schedule B_i: KNOWN\n"
-            "- Secret Shared Key K: UNKNOWN (Eve assumes K'_i = 0)"
+            "- Basis Schedule Bᵢ: KNOWN\n"
+            "- Secret Shared Key K: UNKNOWN (Eve assumes K'ᵢ = 0)"
         )
 
         st.markdown('<div class="sec-header">C. ATTACKER ACTION</div>', unsafe_allow_html=True)
@@ -2432,7 +2432,7 @@ elif nav_section == "Security Lab":
             "- Message M: UNKNOWN\n"
             "- SHA-256 Digest D: UNKNOWN\n"
             "- Secret Shared Key K: UNKNOWN\n"
-            "- Basis Schedule B_i: KNOWN"
+            "- Basis Schedule Bᵢ: KNOWN"
         )
 
         st.markdown('<div class="sec-header">C. ATTACKER ACTION</div>', unsafe_allow_html=True)
@@ -2499,7 +2499,7 @@ elif nav_section == "Security Lab":
         st.markdown('<div class="sec-header">B. ATTACKER KNOWLEDGE</div>', unsafe_allow_html=True)
         st.markdown(
             "- Message M & Key K: UNKNOWN\n"
-            "- Alice Basis Schedule B_Alice: UNKNOWN (Eve guesses basis $B_{\\text{Eve}}$)"
+            "- Alice Basis Schedule $B_{\\text{Alice}}$: UNKNOWN (Eve guesses basis $B_{\\text{Eve}}$)"
         )
 
         st.markdown('<div class="sec-header">C. ATTACKER ACTION</div>', unsafe_allow_html=True)
@@ -2606,7 +2606,7 @@ elif nav_section == "Security Lab":
                 'When Eve replays a captured signature for the SAME message M, Bob\'s verification '
                 'produces ZERO errors. The current QDS prototype has no freshness mechanism: '
                 'no session nonce, no sequence counter, no timestamp, no challenge-response. '
-                'Because the encoding is fully deterministic (D = SHA-256(M), b_i = d_i XOR K_i), '
+                'Because the encoding is fully deterministic (D = SHA-256(M), bᵢ = dᵢ ⊕ Kᵢ), '
                 'a byte-for-byte replay of a valid signature for the same message is '
                 'INDISTINGUISHABLE from a fresh legitimate transmission.'
                 '</div>',
@@ -2748,7 +2748,7 @@ elif nav_section == "Analysis":
             ):
                 ax_.set_facecolor('#0B0414')
                 ax_.plot(ps, obs_, "o-", color=color_, linewidth=2, markersize=6, label="Observed")
-                ax_.set_xlabel("p_attack", color="#E9D5FF")
+                ax_.set_xlabel(r"$p_{\mathrm{atk}}$", color="#E9D5FF")
                 ax_.set_title(label_, fontsize=10, color="#FF70A6", fontweight="bold")
                 ax_.grid(True, linestyle="--", alpha=0.2, color="#A855F7")
                 ax_.tick_params(colors="#C084FC")
@@ -2816,15 +2816,15 @@ elif nav_section == "Analysis":
                 {
                     "Attack": "Channel Tampering",
                     "What Eve Knows": "None",
-                    "What Eve Controls": "Pauli-X error probability p_attack on q2",
-                    "What Bob Observes": "Z/Y basis errors ~ p_attack; X invariant",
-                    "Why Detection Works": "Net error rate (2/3)p_attack exceeds p0",
+                    "What Eve Controls": "Pauli-X error probability pₐₜₖ on q2",
+                    "What Bob Observes": "Z/Y basis errors ~ pₐₜₖ; X invariant",
+                    "Why Detection Works": "Net error rate (2/3)pₐₜₖ exceeds p₀",
                 },
                 {
                     "Attack": "Signature Forgery",
                     "What Eve Knows": "Message M, SHA-256 Digest D",
                     "What Eve Controls": "Forged states prepared assuming K=0",
-                    "What Bob Observes": "Errors at positions where K_i = 1",
+                    "What Bob Observes": "Errors at positions where Kᵢ = 1",
                     "Why Detection Works": "Key 1-density (~50%) causes large error rate",
                 },
                 {
