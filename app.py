@@ -750,7 +750,7 @@ if nav_section == "Overview":
   /* ── Top label row ─────────────────────────────────────────── */
   .labels-row {
     display: grid;
-    grid-template-columns: 180px 1fr 160px 1fr 180px;
+    grid-template-columns: 132px 1fr 140px 1fr 132px;
     align-items: end;
     padding-bottom: 6px;
   }
@@ -776,7 +776,7 @@ if nav_section == "Overview":
   /* ── Pipeline details row ──────────────────────────────────── */
   .pipe-row {
     display: grid;
-    grid-template-columns: 180px 1fr 160px 1fr 180px;
+    grid-template-columns: 132px 1fr 140px 1fr 132px;
     gap: 0;
     margin-top: 6px;
     align-items: start;
@@ -1367,7 +1367,7 @@ function toggleAttack(active) {
 </body>
 </html>
 """
-        _stc.html(_protocol_html, height=740, scrolling=False)
+        _stc.html(_protocol_html, height=820, scrolling=False)
 
 
     st.markdown("---")
