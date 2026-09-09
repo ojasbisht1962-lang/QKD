@@ -106,15 +106,208 @@ css_style_content = """
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
 
-    section[data-testid="stSidebar"] {
-        background-color: rgba(17, 7, 34, 0.94) !important;
-        backdrop-filter: blur(12px) !important;
-        -webkit-backdrop-filter: blur(12px) !important;
-        border-right: 1px solid rgba(236, 72, 153, 0.25) !important;
+    /* Header removal & top gap fix for both main page and sidebar */
+    header[data-testid="stHeader"],
+    [data-testid="stHeader"],
+    div[data-testid="stHeader"],
+    [data-testid="stSidebarHeader"],
+    div[data-testid="stSidebarHeader"],
+    [data-testid="stSidebarCollapseButton"],
+    div[data-testid="stSidebarNav"] {
+        display: none !important;
+        height: 0px !important;
+        min-height: 0px !important;
+        padding: 0px !important;
+        margin: 0px !important;
+        overflow: hidden !important;
     }
-    section[data-testid="stSidebar"] h2, section[data-testid="stSidebar"] h3 {
+
+    /* Eliminate top padding & margin on ALL sidebar container elements */
+    section[data-testid="stSidebar"],
+    [data-testid="stSidebar"],
+    [data-testid="stSidebarContent"],
+    [data-testid="stSidebarUserContent"],
+    section[data-testid="stSidebar"] > div,
+    section[data-testid="stSidebar"] > div:first-child,
+    section[data-testid="stSidebar"] .block-container,
+    div[data-testid="stSidebarUserContent"],
+    div[data-testid="stSidebarContent"] > div {
+        padding-top: 0.3rem !important;
+        margin-top: 0rem !important;
+    }
+
+    /* Main container top padding & margin reduction */
+    [data-testid="stMainBlockContainer"],
+    .main .block-container,
+    div[data-testid="stMainBlockContainer"] {
+        padding-top: 0.5rem !important;
+        padding-bottom: 2rem !important;
+        margin-top: 0rem !important;
+    }
+
+    /* Sidebar container styling */
+    section[data-testid="stSidebar"] {
+        background-color: rgba(17, 7, 34, 0.96) !important;
+        backdrop-filter: blur(14px) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
+        border-right: 1px solid rgba(236, 72, 153, 0.3) !important;
+    }
+
+    section[data-testid="stSidebar"] .block-container {
+        padding-left: 0.8rem !important;
+        padding-right: 0.8rem !important;
+        padding-bottom: 1.5rem !important;
+    }
+
+    /* Sidebar Header Typography & Compact Margins */
+    section[data-testid="stSidebar"] h2 {
+        color: #FF60B5 !important;
+        font-family: 'Outfit', sans-serif !important;
+        font-size: 1.5rem !important;
+        font-weight: 800 !important;
+        margin-top: 0.2rem !important;
+        margin-bottom: 0.2rem !important;
+        padding-bottom: 0 !important;
+        border-bottom: none !important;
+    }
+
+    section[data-testid="stSidebar"] h3 {
         color: #F472B6 !important;
         font-family: 'Outfit', sans-serif !important;
+        font-size: 1.25rem !important;
+        font-weight: 700 !important;
+        margin-top: 0.6rem !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    /* Compact Dividers in Sidebar */
+    section[data-testid="stSidebar"] hr {
+        margin: 8px 0 !important;
+        border-color: rgba(236, 72, 153, 0.3) !important;
+    }
+
+    /* ─── SIDEBAR RADIO SELECTION BUTTONS (HIGHLY VISIBLE PINK CARDS) ─── */
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"],
+    section[data-testid="stSidebar"] div[role="radiogroup"] {
+        gap: 6px !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    /* ALL Radio Option Cards (Unselected State) */
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label,
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-baseweb="radio"],
+    [data-testid="stSidebar"] div[role="radiogroup"] > label,
+    section[data-testid="stSidebar"] label[data-baseweb="radio"],
+    section[data-testid="stSidebar"] div[role="radiogroup"] label {
+        background: linear-gradient(135deg, rgba(236, 72, 153, 0.22) 0%, rgba(168, 85, 247, 0.18) 100%) !important;
+        border: 1.5px solid rgba(236, 72, 153, 0.5) !important;
+        border-radius: 10px !important;
+        padding: 10px 16px !important;
+        margin-bottom: 4px !important;
+        transition: all 0.2s ease-in-out !important;
+        width: 100% !important;
+        cursor: pointer !important;
+        display: flex !important;
+        align-items: center !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    /* Unselected Radio Text Styling */
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label *,
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-baseweb="radio"] *,
+    [data-testid="stSidebar"] div[role="radiogroup"] label *,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label p,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label span {
+        color: #F8E7FF !important;
+        font-family: 'Outfit', sans-serif !important;
+        font-size: 1.08rem !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.02em !important;
+        margin: 0 !important;
+    }
+
+    /* Radio Option Hover State */
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:hover,
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-baseweb="radio"]:hover,
+    [data-testid="stSidebar"] div[role="radiogroup"] > label:hover,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:hover {
+        background: linear-gradient(135deg, rgba(236, 72, 153, 0.45) 0%, rgba(168, 85, 247, 0.35) 100%) !important;
+        border-color: #FF60B5 !important;
+        box-shadow: 0 0 16px rgba(236, 72, 153, 0.5) !important;
+    }
+
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:hover *,
+    [data-testid="stSidebar"] div[role="radiogroup"] label:hover * {
+        color: #FFFFFF !important;
+    }
+
+    /* Active / Selected Radio Option Card State */
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label[data-checked="true"],
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked),
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-baseweb="radio"][aria-checked="true"],
+    [data-testid="stSidebar"] div[role="radiogroup"] > label[data-checked="true"],
+    [data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked),
+    section[data-testid="stSidebar"] div[role="radiogroup"] label[data-checked="true"] {
+        background: linear-gradient(135deg, #EC4899 0%, #D946EF 50%, #A855F7 100%) !important;
+        border: 2px solid #FF99D6 !important;
+        box-shadow: 0 0 22px rgba(236, 72, 153, 0.7) !important;
+    }
+
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label[data-checked="true"] *,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) *,
+    [data-testid="stSidebar"] div[role="radiogroup"] label[data-checked="true"] * {
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.6) !important;
+    }
+
+    /* Radio Circle Indicator Dot Styling */
+    [data-testid="stSidebar"] div[data-baseweb="radio"] > div:first-child {
+        border-color: #EC4899 !important;
+        border-width: 2px !important;
+        background-color: rgba(236, 72, 153, 0.3) !important;
+    }
+
+    [data-testid="stSidebar"] label[data-checked="true"] div[data-baseweb="radio"] > div:first-child,
+    [data-testid="stSidebar"] label:has(input:checked) div[data-baseweb="radio"] > div:first-child,
+    [data-testid="stSidebar"] label[data-baseweb="radio"][aria-checked="true"] div[data-baseweb="radio"] > div:first-child {
+        border-color: #FFFFFF !important;
+        background-color: #FFFFFF !important;
+    }
+
+    /* Sidebar Controls Text Sizes & Styling */
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p {
+        font-size: 1.0rem !important;
+        font-weight: 600 !important;
+        color: #F472B6 !important;
+        font-family: 'Outfit', sans-serif !important;
+        margin-bottom: 4px !important;
+    }
+
+    section[data-testid="stSidebar"] div[data-baseweb="select"] > div,
+    section[data-testid="stSidebar"] input {
+        font-size: 1.0rem !important;
+        font-weight: 500 !important;
+        background-color: rgba(26, 12, 46, 0.8) !important;
+        border: 1px solid rgba(236, 72, 153, 0.4) !important;
+        color: #F3E8FF !important;
+        border-radius: 8px !important;
+    }
+
+    section[data-testid="stSidebar"] [data-testid="stCaptionContainer"] p,
+    section[data-testid="stSidebar"] .stCaption {
+        font-size: 0.90rem !important;
+        color: #C084FC !important;
+        margin-top: 2px !important;
+    }
+
+    section[data-testid="stSidebar"] .stButton > button {
+        width: 100% !important;
+        font-size: 1.0rem !important;
+        padding: 8px 16px !important;
+        margin-top: 4px !important;
     }
 
     h1 {
@@ -278,32 +471,11 @@ css_style_content = """
         transform: translateY(-2px) scale(1.02) !important;
         box-shadow: 0 0 30px rgba(236, 72, 153, 0.65) !important;
     }
-
-    div[data-testid="stSidebar"] div[role="radiogroup"] > label {
-        background: rgba(26, 12, 46, 0.4) !important;
-        border: 1px solid rgba(236, 72, 153, 0.15) !important;
-        border-radius: 8px !important;
-        padding: 8px 14px !important;
-        margin-bottom: 6px !important;
-        transition: all 0.2s ease-in-out !important;
-        font-family: 'Outfit', sans-serif !important;
-        font-weight: 500 !important;
-        letter-spacing: 0.02em !important;
-    }
-    div[data-testid="stSidebar"] div[role="radiogroup"] > label:hover {
-        background: rgba(236, 72, 153, 0.15) !important;
-        border-color: rgba(236, 72, 153, 0.4) !important;
-        box-shadow: 0 0 12px rgba(236, 72, 153, 0.2) !important;
-    }
-    div[data-testid="stSidebar"] div[role="radiogroup"] > label[data-checked="true"] {
-        background: linear-gradient(90deg, rgba(236, 72, 153, 0.25), rgba(168, 85, 247, 0.2)) !important;
-        border-color: #EC4899 !important;
-        box-shadow: 0 0 15px rgba(236, 72, 153, 0.3) !important;
-    }
     </style>
 """
 
 st.markdown(css_style_content + f"<style>{bg_css_override}</style>", unsafe_allow_html=True)
+st.sidebar.markdown(css_style_content, unsafe_allow_html=True)
 
 # ─── Sidebar: Navigation + Global Configuration ───────────────────────────────
 st.sidebar.markdown("## QUANTUM DIGITAL SIGNATURE\n### Security Laboratory")
@@ -326,6 +498,28 @@ nav_section = st.sidebar.radio(
 st.sidebar.markdown("---")
 st.sidebar.markdown("### EXECUTION ENGINE")
 
+# ─── Bi-directional Execution Backend State Synchronization ──────────────────
+if "sidebar_exec_mode" not in st.session_state:
+    st.session_state["sidebar_exec_mode"] = "Local Aer Simulation (Ideal)"
+
+def on_sidebar_exec_change():
+    mode = st.session_state.get("sidebar_exec_mode", "Local Aer Simulation (Ideal)")
+    if mode == "Local Aer Simulation (Ideal)":
+        st.session_state["hw_page_backend_category"] = "Local Ideal Aer Simulator (Noiseless)"
+    elif mode == "Real IBM Quantum Hardware (Physical QPU)":
+        st.session_state["hw_page_backend_category"] = "Physical IBM Quantum Hardware (Cloud QPU)"
+    else:
+        st.session_state["hw_page_backend_category"] = "IBM Realistic QPU Noise Simulators (Offline / Instant)"
+
+def on_hw_page_backend_change():
+    cat = st.session_state.get("hw_page_backend_category", "Local Ideal Aer Simulator (Noiseless)")
+    if cat == "Local Ideal Aer Simulator (Noiseless)":
+        st.session_state["sidebar_exec_mode"] = "Local Aer Simulation (Ideal)"
+    elif cat == "Physical IBM Quantum Hardware (Cloud QPU)":
+        st.session_state["sidebar_exec_mode"] = "Real IBM Quantum Hardware (Physical QPU)"
+    else:
+        st.session_state["sidebar_exec_mode"] = "IBM Quantum Realistic Noise Simulator"
+
 execution_backend_mode = st.sidebar.radio(
     "Execution Backend Mode",
     options=[
@@ -333,7 +527,8 @@ execution_backend_mode = st.sidebar.radio(
         "IBM Quantum Realistic Noise Simulator",
         "Real IBM Quantum Hardware (Physical QPU)",
     ],
-    index=0,
+    key="sidebar_exec_mode",
+    on_change=on_sidebar_exec_change,
 )
 
 # Configure active backend adapter based on selection
@@ -400,21 +595,40 @@ if "shared_key" not in st.session_state:
 
 shared_key: List[int] = st.session_state.shared_key
 
+if "global_p0" not in st.session_state:
+    st.session_state["global_p0"] = 0.02
+if "global_alpha" not in st.session_state:
+    st.session_state["global_alpha"] = 0.05
+
+def on_sidebar_p0_change():
+    st.session_state["main_ht_p0"] = min(0.30, max(0.001, float(st.session_state["global_p0"])))
+
+def on_sidebar_alpha_change():
+    st.session_state["main_ht_alpha"] = min(0.20, max(0.001, float(st.session_state["global_alpha"])))
+
+def on_main_p0_change():
+    st.session_state["global_p0"] = min(0.30, max(0.00, float(st.session_state["main_ht_p0"])))
+
+def on_main_alpha_change():
+    st.session_state["global_alpha"] = min(0.20, max(0.001, float(st.session_state["main_ht_alpha"])))
+
 baseline_noise = st.sidebar.slider(
     "Baseline Error Rate (p0)",
     min_value=0.00,
-    max_value=0.15,
-    value=0.02,
+    max_value=0.30,
     step=0.005,
+    key="global_p0",
+    on_change=on_sidebar_p0_change,
     help="Calibrated legitimate channel noise baseline error rate p0. This is an experimental parameter, NOT a universal constant.",
 )
 
 alpha = st.sidebar.slider(
     "Significance Threshold (alpha)",
     min_value=0.001,
-    max_value=0.10,
-    value=0.05,
+    max_value=0.20,
     step=0.005,
+    key="global_alpha",
+    on_change=on_sidebar_alpha_change,
 )
 
 shots_per_qubit = st.sidebar.selectbox(
@@ -681,7 +895,7 @@ if nav_section == "Overview":
             <h4 style="color: #F472B6; font-family: 'Outfit', sans-serif; margin: 0 0 10px 0; font-size: 1.1rem;">Classical Preprocessing</h4>
             <div style="font-size: 0.86rem; color: #E9D5FF; line-height: 1.6;">
               <p style="margin: 6px 0;"><strong>Step 1: Hash Generation</strong><br>Message <code>M</code> &rarr; <code>D = SHA-256(M)</code> (256 bits)</p>
-              <p style="margin: 6px 0;"><strong>Step 2: XOR Key Encoding</strong><br><code>b_i = d_i &oplus; K_i</code> for <code>i &in; 0..255</code></p>
+              <p style="margin: 6px 0;"><strong>Step 2: XOR Key Encoding</strong><br><code>b<sub>i</sub> = d<sub>i</sub> &oplus; K<sub>i</sub></code> for <code>i &in; 0..255</code></p>
               <p style="margin: 6px 0;"><strong>Step 3: Basis Schedule</strong><br><code>i mod 3 = 0 &rarr; Z</code> | <code>1 &rarr; X</code> | <code>2 &rarr; Y</code></p>
             </div>
           </div>
@@ -694,8 +908,8 @@ if nav_section == "Overview":
             </div>
             <h4 style="color: #C084FC; font-family: 'Outfit', sans-serif; margin: 0 0 10px 0; font-size: 1.1rem;">Quantum Transmission</h4>
             <div style="font-size: 0.86rem; color: #E9D5FF; line-height: 1.6;">
-              <p style="margin: 6px 0;"><strong>Step 4: State Preparation</strong><br>Prepare <code>|&psi;_i&rang;</code> Pauli eigenstate from <code>(b_i, Basis_i)</code></p>
-              <p style="margin: 6px 0;"><strong>Step 5: 3-Qubit Teleportation</strong><br>Bell measurement <code>(c0, c1)</code> + Feedforward <code>X^{c1}Z^{c0}</code></p>
+              <p style="margin: 6px 0;"><strong>Step 4: State Preparation</strong><br>Prepare <code>|&psi;<sub>i</sub>&rang;</code> Pauli eigenstate from <code>(b<sub>i</sub>, Basis<sub>i</sub>)</code></p>
+              <p style="margin: 6px 0;"><strong>Step 5: 3-Qubit Teleportation</strong><br>Bell measurement <code>(c0, c1)</code> + Feedforward <code>X<sup>c1</sup>Z<sup>c0</sup></code></p>
               <p style="margin: 6px 0; color: #FF70A6;"><strong>[Adversarial Insertion Point]</strong><br>Eve operates between Alice & Bob</p>
             </div>
           </div>
@@ -708,9 +922,9 @@ if nav_section == "Overview":
             </div>
             <h4 style="color: #34D399; font-family: 'Outfit', sans-serif; margin: 0 0 10px 0; font-size: 1.1rem;">Statistical Detection</h4>
             <div style="font-size: 0.86rem; color: #E9D5FF; line-height: 1.6;">
-              <p style="margin: 6px 0;"><strong>Step 6: Qubit Readout</strong><br>Bob measures <code>q2</code> in basis <code>Basis_i</code></p>
+              <p style="margin: 6px 0;"><strong>Step 6: Qubit Readout</strong><br>Bob measures <code>q2</code> in basis <code>Basis<sub>i</sub></code></p>
               <p style="margin: 6px 0;"><strong>Step 7: Mismatch Error Count</strong><br>Count positions <code>k</code> where outcome &ne; expected</p>
-              <p style="margin: 6px 0;"><strong>Step 8: Binomial Test</strong><br>Calculate <code>p = P(K &ge; k | n, p0)</code> vs <code>&alpha;</code></p>
+              <p style="margin: 6px 0;"><strong>Step 8: Binomial Test</strong><br>Calculate <code>p = P(K &ge; k | n, p<sub>0</sub>)</code> vs <code>&alpha;</code></p>
             </div>
           </div>
         </div>
@@ -718,33 +932,657 @@ if nav_section == "Overview":
         unsafe_allow_html=True,
     )
 
-    with st.expander("Interactive Sequence Diagram (Architecture)", expanded=False):
-        st.markdown(
-            """
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Alice as Alice (Signer)
-    participant QC as Quantum Channel (Qiskit Aer / QPU)
-    actor Eve as Eve (Adversary)
-    actor Bob as Bob (Verifier)
+    # ── Interactive Protocol Visualization (replaces static Mermaid) ─────────
+    import streamlit.components.v1 as _stc
+    with st.expander("Live Protocol Visualization (Architecture)", expanded=True):
+        _protocol_html = r"""
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;600;700&display=swap');
 
-    Note over Alice: 1. Compute D = SHA256(M)<br/>2. XOR b_i = d_i ⊕ K_i<br/>3. Basis Schedule i%3
-    Alice->>QC: Prepare |ψ_i⟩ Pauli Eigenstates
-    opt Physical Attack Injected
-        QC->>Eve: Intercept / Bit-Flip / Forgery
-        Eve->>QC: Resend Manipulated State
-    end
-    QC->>Bob: Transmit via 3-Qubit Teleportation
-    Note over Bob: 4. Readout q2 in Basis_i<br/>5. Count Mismatches k<br/>6. Binomial Test p vs α
-    alt p-value ≤ α
-        Bob-->>Alice: REJECT SIGNATURE (THREAT DETECTED)
-    else p-value > α
-        Bob-->>Alice: ACCEPT SIGNATURE (NORMAL CHANNEL)
-    end
-```
-            """
-        )
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #080410;
+    font-family: 'Inter', sans-serif;
+    color: #E9D5FF;
+    padding: 18px 10px 12px 10px;
+  }
+
+  .diagram-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ── Top label row ─────────────────────────────────────────── */
+  .labels-row {
+    display: grid;
+    grid-template-columns: 180px 1fr 160px 1fr 180px;
+    align-items: end;
+    padding-bottom: 6px;
+  }
+  .actor-label {
+    text-align: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 5px 0 2px 0;
+  }
+  .label-alice  { color: #F472B6; text-align: left; padding-left: 6px; }
+  .label-eve    { color: #FBBF24; text-align: center; }
+  .label-bob    { color: #34D399; text-align: right; padding-right: 6px; }
+  .label-center { color: #818CF8; font-size: 0.68rem; letter-spacing: 0.06em; text-align: center; }
+
+  /* ── SVG channel area ──────────────────────────────────────── */
+  .channel-svg-wrap {
+    width: 100%;
+    overflow: visible;
+  }
+
+  /* ── Pipeline details row ──────────────────────────────────── */
+  .pipe-row {
+    display: grid;
+    grid-template-columns: 240px 1fr 180px 1fr 240px;
+    gap: 0;
+    margin-top: 6px;
+    align-items: start;
+  }
+  .pipe-box {
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.74rem;
+    line-height: 1.65;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .pipe-alice {
+    background: rgba(236,72,153,0.10);
+    border: 1px solid rgba(236,72,153,0.35);
+    color: #F9A8D4;
+  }
+  .pipe-eve {
+    background: rgba(251,191,36,0.10);
+    border: 1px solid rgba(251,191,36,0.35);
+    color: #FDE68A;
+    text-align: center;
+  }
+  .pipe-bob {
+    background: rgba(52,211,153,0.10);
+    border: 1px solid rgba(52,211,153,0.35);
+    color: #6EE7B7;
+    text-align: right;
+  }
+  .pipe-spacer { /* empty grid cells */ }
+  .pipe-step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 3px;
+  }
+  .step-num {
+    background: rgba(236,72,153,0.25);
+    color: #F472B6;
+    border-radius: 50%;
+    width: 17px;
+    height: 17px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-num-eve  { background: rgba(251,191,36,0.25); color: #FBBF24; }
+  .step-num-bob  { background: rgba(52,211,153,0.25); color: #34D399; }
+
+  /* ── Decision row ──────────────────────────────────────────── */
+  .decision-row {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+    margin-top: 12px;
+    padding-right: 0;
+  }
+  .decision-box {
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.04em;
+  }
+  .dec-accept {
+    background: rgba(16,185,129,0.12);
+    border: 1.5px solid rgba(16,185,129,0.55);
+    color: #34D399;
+    box-shadow: 0 0 12px rgba(16,185,129,0.15);
+  }
+  .dec-reject {
+    background: rgba(239,68,68,0.12);
+    border: 1.5px solid rgba(239,68,68,0.55);
+    color: #F87171;
+    box-shadow: 0 0 12px rgba(239,68,68,0.12);
+  }
+  .dec-icon { font-size: 1.0rem; }
+
+  /* ── Stage timeline ────────────────────────────────────────── */
+  .timeline {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-top: 14px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 4px 0;
+  }
+  .tl-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 90px;
+    flex: 1;
+    cursor: default;
+  }
+  .tl-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.68rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    border: 2px solid;
+    position: relative;
+    z-index: 2;
+  }
+  .tl-dot-done  { background: rgba(52,211,153,0.2);  border-color: #34D399; color: #34D399; }
+  .tl-dot-idle  { background: rgba(100,100,130,0.12); border-color: #4B5563; color: #6B7280; }
+  .tl-label {
+    font-size: 0.60rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: #9CA3AF;
+    margin-top: 5px;
+    text-align: center;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    line-height: 1.35;
+  }
+  .tl-connector {
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(99,102,241,0.4), rgba(99,102,241,0.15));
+    margin-bottom: 22px;
+    min-width: 8px;
+  }
+
+  /* ── Basis legend ─────────────────────────────────────────── */
+  .basis-legend {
+    display: flex;
+    gap: 14px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .basis-tag {
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+  }
+  .basis-z { background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.4); color: #A5B4FC; }
+  .basis-x { background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.35); color: #7DD3FC; }
+  .basis-y { background: rgba(168,85,247,0.12); border: 1px solid rgba(168,85,247,0.35); color: #D8B4FE; }
+
+  /* ── Packet animation ─────────────────────────────────────── */
+  @keyframes slideRight {
+    0%   { transform: translateX(0px);   opacity: 0.2; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateX(250px); opacity: 0.2; }
+  }
+  @keyframes slideRightFull {
+    0%   { transform: translateX(0px);   opacity: 0.2; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateX(640px); opacity: 0.2; }
+  }
+  .packet-group-direct { animation: slideRightFull 3.8s ease-in-out infinite; }
+  .packet-group-alice  { animation: slideRight 3.8s ease-in-out infinite; }
+  .packet-group-eve    { animation: slideRight 3.8s ease-in-out infinite 1.9s; }
+
+  /* Section divider */
+  .sec-divider {
+    border: none;
+    border-top: 1px solid rgba(168,85,247,0.18);
+    margin: 10px 0;
+  }
+</style>
+</head>
+<body>
+<div class="diagram-wrap">
+
+  <!-- ═══ LABEL ROW ════════════════════════════════════════════════ -->
+  <div class="labels-row">
+    <div class="actor-label label-alice">
+      ⬡ ALICE<br/><span style="font-size:0.62rem;font-weight:400;color:#C084FC;">SIGNER</span>
+    </div>
+    <div class="label-center">
+      ─── QUANTUM CHANNEL (Qiskit Aer / 3-Qubit Teleportation) ───
+    </div>
+    <div class="actor-label label-eve" id="eve-header">
+      ◈ EVE<br/><span style="font-size:0.62rem;font-weight:400;color:#D97706;">ADVERSARY</span>
+    </div>
+    <div class="label-center" id="eve-channel-label">
+      ─── CHANNEL CONTINUATION ───
+    </div>
+    <div class="actor-label label-bob">
+      ⬡ BOB<br/><span style="font-size:0.62rem;font-weight:400;color:#6EE7B7;">VERIFIER</span>
+    </div>
+  </div>
+
+  <!-- ═══ SVG CHANNEL DIAGRAM ═══════════════════════════════════════ -->
+  <div class="channel-svg-wrap">
+  <svg id="channel-svg" viewBox="0 0 960 130" preserveAspectRatio="xMidYMid meet"
+       style="width:100%;height:auto;" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!-- Alice glow -->
+      <filter id="f-alice" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="4" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <!-- Eve glow warning -->
+      <filter id="f-eve" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="5" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <!-- Bob glow -->
+      <filter id="f-bob" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="4" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <!-- Quantum channel gradient -->
+      <linearGradient id="ch-grad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%"   stop-color="#EC4899" stop-opacity="0.6"/>
+        <stop offset="50%"  stop-color="#6366F1" stop-opacity="0.8"/>
+        <stop offset="100%" stop-color="#34D399" stop-opacity="0.6"/>
+      </linearGradient>
+      <!-- Arrow markers -->
+      <marker id="arr-cyan" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0,8 3,0 6" fill="#6366F1"/>
+      </marker>
+      <marker id="arr-red" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0,8 3,0 6" fill="#F87171"/>
+      </marker>
+      <marker id="arr-green" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0,8 3,0 6" fill="#34D399"/>
+      </marker>
+      <marker id="arr-amber" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0,8 3,0 6" fill="#FBBF24"/>
+      </marker>
+      <!-- Packet shapes -->
+      <symbol id="pkt-z" viewBox="-7 -7 14 14">
+        <circle r="6" fill="#6366F1" fill-opacity="0.85"/>
+        <text x="0" y="4" text-anchor="middle" font-size="7" font-family="serif" fill="white">0</text>
+      </symbol>
+      <symbol id="pkt-x" viewBox="-7 -7 14 14">
+        <circle r="6" fill="#38BDF8" fill-opacity="0.85"/>
+        <text x="0" y="4" text-anchor="middle" font-size="7" font-family="serif" fill="white">+</text>
+      </symbol>
+      <symbol id="pkt-y" viewBox="-7 -7 14 14">
+        <circle r="6" fill="#A855F7" fill-opacity="0.85"/>
+        <text x="0" y="4" text-anchor="middle" font-size="6" font-family="serif" fill="white">+i</text>
+      </symbol>
+      <symbol id="pkt-disturbed" viewBox="-7 -7 14 14">
+        <polygon points="0,-7 7,7 -7,7" fill="#F87171" fill-opacity="0.9"/>
+        <text x="0" y="5" text-anchor="middle" font-size="6.5" font-family="serif" fill="white">?</text>
+      </symbol>
+    </defs>
+
+    <!-- ── Alice node box ─────────────────────── -->
+    <rect x="2" y="30" width="130" height="70" rx="8" ry="8"
+          fill="rgba(236,72,153,0.08)" stroke="#EC4899" stroke-width="1.4"
+          filter="url(#f-alice)"/>
+    <text x="67" y="52" text-anchor="middle" font-size="11" font-weight="700"
+          font-family="Inter,sans-serif" fill="#F472B6">ALICE</text>
+    <text x="67" y="66" text-anchor="middle" font-size="8.5"
+          font-family="JetBrains Mono,monospace" fill="#C084FC">SHA-256 → XOR</text>
+    <text x="67" y="78" text-anchor="middle" font-size="8"
+          font-family="JetBrains Mono,monospace" fill="#C084FC">Basis: Z / X / Y</text>
+    <text x="67" y="90" text-anchor="middle" font-size="8"
+          font-family="JetBrains Mono,monospace" fill="#F9A8D4">Prepares |ψᵢ⟩ on q0</text>
+
+    <!-- ── Bob node box ───────────────────────── -->
+    <rect x="828" y="30" width="130" height="70" rx="8" ry="8"
+          fill="rgba(52,211,153,0.07)" stroke="#34D399" stroke-width="1.4"
+          filter="url(#f-bob)"/>
+    <text x="893" y="52" text-anchor="middle" font-size="11" font-weight="700"
+          font-family="Inter,sans-serif" fill="#34D399">BOB</text>
+    <text x="893" y="66" text-anchor="middle" font-size="8.5"
+          font-family="JetBrains Mono,monospace" fill="#6EE7B7">Measure q2 in Bᵢ</text>
+    <text x="893" y="78" text-anchor="middle" font-size="8"
+          font-family="JetBrains Mono,monospace" fill="#6EE7B7">Count errors k</text>
+    <text x="893" y="90" text-anchor="middle" font-size="8"
+          font-family="JetBrains Mono,monospace" fill="#A7F3D0">Binomial test p vs α</text>
+
+    <!-- ══════════════ NO-ATTACK mode (default) ══════════════ -->
+    <g id="g-no-attack">
+      <!-- Full direct channel line -->
+      <line x1="132" y1="65" x2="820" y2="65"
+            stroke="url(#ch-grad)" stroke-width="2.5"
+            stroke-dasharray="none" marker-end="url(#arr-green)"/>
+
+      <!-- Channel label -->
+      <text x="480" y="57" text-anchor="middle" font-size="8.5"
+            font-family="JetBrains Mono,monospace" fill="#818CF8">
+        3-Qubit Teleportation (Bell Pair + Feedforward)
+      </text>
+
+      <!-- Eve inactive box (centred on channel) -->
+      <rect x="420" y="72" width="120" height="36" rx="6"
+            fill="rgba(75,85,99,0.15)" stroke="#4B5563" stroke-width="1"
+            stroke-dasharray="4,3"/>
+      <text x="480" y="87" text-anchor="middle" font-size="8.5" font-weight="700"
+            font-family="Inter,sans-serif" fill="#6B7280">EVE  ·  INACTIVE</text>
+      <text x="480" y="100" text-anchor="middle" font-size="7.5"
+            font-family="JetBrains Mono,monospace" fill="#4B5563">
+        no interception
+      </text>
+
+      <!-- Travelling quantum packets -->
+      <g class="packet-group-direct">
+        <use href="#pkt-z" x="155" y="59" width="14" height="14"/>
+        <use href="#pkt-x" x="175" y="59" width="14" height="14"/>
+        <use href="#pkt-y" x="195" y="59" width="14" height="14"/>
+        <use href="#pkt-z" x="215" y="59" width="14" height="14"/>
+        <use href="#pkt-x" x="235" y="59" width="14" height="14"/>
+      </g>
+    </g>
+
+    <!-- ══════════════ ATTACK mode (hidden by default) ════════ -->
+    <g id="g-attack" style="display:none;">
+      <!-- Alice → Eve segment -->
+      <line x1="132" y1="65" x2="408" y2="65"
+            stroke="#EC4899" stroke-width="2" stroke-dasharray="5,2"
+            marker-end="url(#arr-amber)"/>
+
+      <!-- Eve active node (centred) -->
+      <rect x="410" y="18" width="140" height="95" rx="8"
+            fill="rgba(251,191,36,0.10)" stroke="#FBBF24" stroke-width="1.8"
+            filter="url(#f-eve)"/>
+      <!-- Warning glow ring -->
+      <rect x="407" y="15" width="146" height="101" rx="10"
+            fill="none" stroke="rgba(251,191,36,0.25)" stroke-width="3"/>
+      <text x="480" y="36" text-anchor="middle" font-size="10.5" font-weight="700"
+            font-family="Inter,sans-serif" fill="#FBBF24">◈ EVE  ACTIVE</text>
+      <text x="480" y="50" text-anchor="middle" font-size="7.5"
+            font-family="JetBrains Mono,monospace" fill="#FDE68A">Intercept |ψᵢ⟩</text>
+      <text x="480" y="62" text-anchor="middle" font-size="7.5"
+            font-family="JetBrains Mono,monospace" fill="#FDE68A">Measure in B_Eve</text>
+      <text x="480" y="74" text-anchor="middle" font-size="7.5"
+            font-family="JetBrains Mono,monospace" fill="#FDE68A">State collapse</text>
+      <text x="480" y="86" text-anchor="middle" font-size="7.5"
+            font-family="JetBrains Mono,monospace" fill="#F87171">Resend disturbed</text>
+      <text x="480" y="100" text-anchor="middle" font-size="7"
+            font-family="JetBrains Mono,monospace" fill="#D97706">
+        P(error) ≈ 1/3  (random basis)
+      </text>
+
+      <!-- Eve → Bob segment -->
+      <line x1="550" y1="65" x2="820" y2="65"
+            stroke="#F87171" stroke-width="2" stroke-dasharray="5,2"
+            marker-end="url(#arr-red)"/>
+
+      <!-- Packets: Alice side -->
+      <g class="packet-group-alice">
+        <use href="#pkt-z" x="155" y="59" width="14" height="14"/>
+        <use href="#pkt-x" x="175" y="59" width="14" height="14"/>
+        <use href="#pkt-y" x="195" y="59" width="14" height="14"/>
+      </g>
+      <!-- Disturbed packets: Eve side -->
+      <g class="packet-group-eve">
+        <use href="#pkt-disturbed" x="558" y="59" width="14" height="14"/>
+        <use href="#pkt-z"         x="578" y="59" width="14" height="14"/>
+        <use href="#pkt-disturbed" x="598" y="59" width="14" height="14"/>
+      </g>
+    </g>
+
+  </svg>
+  </div>
+
+  <!-- ═══ PIPELINE DETAILS ════════════════════════════════════════ -->
+  <div class="pipe-row">
+    <!-- Alice pipeline -->
+    <div class="pipe-box pipe-alice">
+      <div style="font-weight:700;color:#F472B6;margin-bottom:6px;font-size:0.78rem;">
+        ALICE  ·  CLASSICAL DOMAIN
+      </div>
+      <div class="pipe-step"><span class="step-num">1</span> M → SHA-256(M) = D</div>
+      <div class="pipe-step"><span class="step-num">2</span> bᵢ = dᵢ ⊕ Kᵢ</div>
+      <div class="pipe-step"><span class="step-num">3</span> Basis: i mod 3 → Z/X/Y</div>
+      <div class="pipe-step"><span class="step-num">4</span> Prepare |ψᵢ⟩ on q0</div>
+      <div class="pipe-step"><span class="step-num">5</span> Bell pair (q1,q2) + CNOT</div>
+    </div>
+
+    <div class="pipe-spacer"></div>
+
+    <!-- Eve pipeline (toggles) -->
+    <div class="pipe-box pipe-eve" id="pipe-eve-box">
+      <div style="font-weight:700;color:#FBBF24;margin-bottom:6px;font-size:0.78rem;">
+        EVE  ·  ADVERSARY
+      </div>
+      <div id="eve-inactive-pipe">
+        <div style="color:#6B7280;font-size:0.72rem;">No interception.<br/>Channel intact.</div>
+      </div>
+      <div id="eve-active-pipe" style="display:none;">
+        <div class="pipe-step"><span class="step-num step-num-eve">1</span> Intercept |ψᵢ⟩</div>
+        <div class="pipe-step"><span class="step-num step-num-eve">2</span> Measure (B_Eve)</div>
+        <div class="pipe-step"><span class="step-num step-num-eve">3</span> Collapse → eigenstate</div>
+        <div class="pipe-step"><span class="step-num step-num-eve">4</span> Resend disturbed state</div>
+        <div style="margin-top:4px;font-size:0.68rem;color:#D97706;">
+          2/3 chance of basis mismatch<br/>→ ~1/3 error rate (theoretical)
+        </div>
+      </div>
+    </div>
+
+    <div class="pipe-spacer"></div>
+
+    <!-- Bob pipeline -->
+    <div class="pipe-box pipe-bob">
+      <div style="font-weight:700;color:#34D399;margin-bottom:6px;font-size:0.78rem;text-align:right;">
+        BOB  ·  VERIFIER
+      </div>
+      <div class="pipe-step" style="justify-content:flex-end;">
+        Apply X^c1·Z^c0 on q2 <span class="step-num step-num-bob" style="margin-left:6px;">1</span>
+      </div>
+      <div class="pipe-step" style="justify-content:flex-end;">
+        Rotate q2 to Basisᵢ <span class="step-num step-num-bob" style="margin-left:6px;">2</span>
+      </div>
+      <div class="pipe-step" style="justify-content:flex-end;">
+        Measure → c2 <span class="step-num step-num-bob" style="margin-left:6px;">3</span>
+      </div>
+      <div class="pipe-step" style="justify-content:flex-end;">
+        Count errors k / n <span class="step-num step-num-bob" style="margin-left:6px;">4</span>
+      </div>
+      <div class="pipe-step" style="justify-content:flex-end;">
+        P(K≥k | n,p₀) vs α <span class="step-num step-num-bob" style="margin-left:6px;">5</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sec-divider"/>
+
+  <!-- ═══ INTERACTIVE TOGGLE ════════════════════════════════════ -->
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
+    <span style="font-size:0.78rem;font-family:'JetBrains Mono',monospace;color:#9CA3AF;letter-spacing:0.05em;">
+      ATTACK MODE:
+    </span>
+    <button onclick="toggleAttack(false)"
+            id="btn-no"
+            style="padding:5px 16px;border-radius:6px;border:1.5px solid #34D399;
+                   background:rgba(52,211,153,0.15);color:#34D399;font-family:'JetBrains Mono',monospace;
+                   font-size:0.72rem;font-weight:700;cursor:pointer;letter-spacing:0.05em;">
+      NO ATTACK
+    </button>
+    <button onclick="toggleAttack(true)"
+            id="btn-attack"
+            style="padding:5px 16px;border-radius:6px;border:1.5px solid #4B5563;
+                   background:rgba(75,85,99,0.08);color:#6B7280;font-family:'JetBrains Mono',monospace;
+                   font-size:0.72rem;font-weight:700;cursor:pointer;letter-spacing:0.05em;">
+      INTERCEPT-RESEND
+    </button>
+    <span style="font-size:0.70rem;color:#6B7280;font-family:'JetBrains Mono',monospace;margin-left:4px;">
+      (toggle to preview diagram states)
+    </span>
+  </div>
+
+  <!-- ═══ DECISION OUTCOME ════════════════════════════════════════ -->
+  <div class="decision-row">
+    <div class="decision-box dec-accept">
+      <span class="dec-icon">✓</span>
+      <div>
+        <div>p-value &gt; α</div>
+        <div style="font-size:0.65rem;font-weight:400;letter-spacing:0.02em;margin-top:1px;">
+          FAIL TO REJECT H₀ → ACCEPT SIGNATURE
+        </div>
+      </div>
+    </div>
+    <div class="decision-box dec-reject">
+      <span class="dec-icon">⚠</span>
+      <div>
+        <div>p-value ≤ α</div>
+        <div style="font-size:0.65rem;font-weight:400;letter-spacing:0.02em;margin-top:1px;">
+          REJECT H₀ → THREAT DETECTED / REJECT
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sec-divider"/>
+
+  <!-- ═══ PROTOCOL TIMELINE ══════════════════════════════════════ -->
+  <div style="font-size:0.68rem;font-family:'JetBrains Mono',monospace;color:#6B7280;
+              letter-spacing:0.09em;margin-bottom:6px;text-transform:uppercase;">
+    Protocol Execution Stages
+  </div>
+  <div class="timeline">
+    <div class="tl-stage">
+      <div class="tl-dot tl-dot-done">✓</div>
+      <div class="tl-label">MSG<br/>Input</div>
+    </div>
+    <div class="tl-connector"></div>
+    <div class="tl-stage">
+      <div class="tl-dot tl-dot-done">✓</div>
+      <div class="tl-label">SHA-256<br/>Hash</div>
+    </div>
+    <div class="tl-connector"></div>
+    <div class="tl-stage">
+      <div class="tl-dot tl-dot-done">✓</div>
+      <div class="tl-label">State<br/>Prepare</div>
+    </div>
+    <div class="tl-connector"></div>
+    <div class="tl-stage">
+      <div class="tl-dot tl-dot-done">✓</div>
+      <div class="tl-label">Transmit<br/>(Bell)</div>
+    </div>
+    <div class="tl-connector"></div>
+    <div class="tl-stage" id="tl-eve">
+      <div class="tl-dot tl-dot-idle" id="tl-eve-dot">○</div>
+      <div class="tl-label">Eve<br/>Interact</div>
+    </div>
+    <div class="tl-connector"></div>
+    <div class="tl-stage">
+      <div class="tl-dot tl-dot-done">✓</div>
+      <div class="tl-label">Bob<br/>Measure</div>
+    </div>
+    <div class="tl-connector"></div>
+    <div class="tl-stage">
+      <div class="tl-dot tl-dot-done">✓</div>
+      <div class="tl-label">Binomial<br/>Verify</div>
+    </div>
+    <div class="tl-connector"></div>
+    <div class="tl-stage">
+      <div class="tl-dot tl-dot-done">✓</div>
+      <div class="tl-label">Security<br/>Decision</div>
+    </div>
+  </div>
+
+  <hr class="sec-divider"/>
+
+  <!-- ═══ BASIS LEGEND ═══════════════════════════════════════════ -->
+  <div style="font-size:0.68rem;font-family:'JetBrains Mono',monospace;color:#6B7280;
+              letter-spacing:0.09em;margin-bottom:6px;text-transform:uppercase;">
+    Pauli Eigenstate Encoding
+  </div>
+  <div class="basis-legend">
+    <div class="basis-tag basis-z">Z-Basis (i mod 3 = 0) &nbsp;·&nbsp; |0⟩ (+1) &nbsp; |1⟩ (−1)</div>
+    <div class="basis-tag basis-x">X-Basis (i mod 3 = 1) &nbsp;·&nbsp; |+⟩ (+1) &nbsp; |−⟩ (−1)</div>
+    <div class="basis-tag basis-y">Y-Basis (i mod 3 = 2) &nbsp;·&nbsp; |+i⟩ (+1) &nbsp; |−i⟩ (−1)</div>
+  </div>
+
+</div><!-- /diagram-wrap -->
+
+<script>
+function toggleAttack(active) {
+  var gNone   = document.getElementById('g-no-attack');
+  var gAtk    = document.getElementById('g-attack');
+  var ePipe   = document.getElementById('eve-active-pipe');
+  var ePipeNo = document.getElementById('eve-inactive-pipe');
+  var eveDot  = document.getElementById('tl-eve-dot');
+  var btnNo   = document.getElementById('btn-no');
+  var btnAtk  = document.getElementById('btn-attack');
+  var pipeEve = document.getElementById('pipe-eve-box');
+
+  if (active) {
+    gNone.style.display   = 'none';
+    gAtk.style.display    = '';
+    ePipeNo.style.display = 'none';
+    ePipe.style.display   = '';
+    eveDot.textContent    = '!';
+    eveDot.className      = 'tl-dot';
+    eveDot.style.cssText  = 'background:rgba(251,191,36,0.25);border-color:#FBBF24;color:#FBBF24;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700;border:2px solid;';
+    pipeEve.style.borderColor = 'rgba(251,191,36,0.55)';
+    pipeEve.style.background  = 'rgba(251,191,36,0.10)';
+
+    btnAtk.style.border     = '1.5px solid #FBBF24';
+    btnAtk.style.background = 'rgba(251,191,36,0.15)';
+    btnAtk.style.color      = '#FBBF24';
+    btnNo.style.border      = '1.5px solid #4B5563';
+    btnNo.style.background  = 'rgba(75,85,99,0.08)';
+    btnNo.style.color       = '#6B7280';
+  } else {
+    gNone.style.display   = '';
+    gAtk.style.display    = 'none';
+    ePipeNo.style.display = '';
+    ePipe.style.display   = 'none';
+    eveDot.textContent    = '○';
+    eveDot.className      = 'tl-dot tl-dot-idle';
+    eveDot.style.cssText  = '';
+    pipeEve.style.borderColor = 'rgba(251,191,36,0.35)';
+    pipeEve.style.background  = 'rgba(251,191,36,0.10)';
+
+    btnNo.style.border      = '1.5px solid #34D399';
+    btnNo.style.background  = 'rgba(52,211,153,0.15)';
+    btnNo.style.color       = '#34D399';
+    btnAtk.style.border     = '1.5px solid #4B5563';
+    btnAtk.style.background = 'rgba(75,85,99,0.08)';
+    btnAtk.style.color      = '#6B7280';
+  }
+}
+</script>
+</body>
+</html>
+"""
+        _stc.html(_protocol_html, height=900, scrolling=False)
+
 
     st.markdown("---")
     st.header("Protocol Status Panel")
@@ -826,22 +1664,22 @@ elif nav_section == "Protocol":
                 </div>
                 <div style="font-size: 0.85rem; color: #E9D5FF; line-height: 1.6;">
                   • <strong>Message M</strong> &rarr; <code>SHA-256(M)</code> = 256-bit Digest <code>D</code><br>
-                  • <strong>Secret Key K</strong> &rarr; Compute <code>b_i = d_i &oplus; K_i</code><br>
+                  • <strong>Secret Key K</strong> &rarr; Compute <code>b<sub>i</sub> = d<sub>i</sub> &oplus; K<sub>i</sub></code><br>
                   • <strong>Basis Schedule</strong> &rarr; <code>Z</code> (0), <code>X</code> (1), <code>Y</code> (2)<br>
-                  • <strong>Prepare State</strong> &rarr; <code>|&psi;_i&rang;</code> on qubit <code>q0</code>
+                  • <strong>Prepare State</strong> &rarr; <code>|&psi;<sub>i</sub>&rang;</code> on qubit <code>q0</code>
                 </div>
               </div>
 
               <!-- Channel Card -->
               <div style="background: rgba(22, 10, 42, 0.85); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 10px; padding: 18px;">
                 <div style="color: #C084FC; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.05rem; margin-bottom: 10px; border-bottom: 1px solid rgba(168, 85, 247, 0.2); padding-bottom: 6px;">
-                  QUANTUM CHANNEL & EVE
+                  QUANTUM CHANNEL &amp; EVE
                 </div>
                 <div style="font-size: 0.85rem; color: #E9D5FF; line-height: 1.6;">
                   • <code>q0</code>: Alice Signature Qubit<br>
                   • <code>(q1, q2)</code>: EPR Bell Pair (<code>H(q1) + CNOT(q1&rarr;q2)</code>)<br>
                   • <strong>Bell Measurement</strong>: <code>CNOT(q0&rarr;q1) + H(q0)</code> &rarr; <code>c0, c1</code><br>
-                  • <span style="color: #FF70A6;"><strong>[ATTACK POINT]</strong> Eve operates between transmission & readout</span>
+                  • <span style="color: #FF70A6;"><strong>[ATTACK POINT]</strong> Eve operates between transmission &amp; readout</span>
                 </div>
               </div>
 
@@ -852,9 +1690,9 @@ elif nav_section == "Protocol":
                 </div>
                 <div style="font-size: 0.85rem; color: #E9D5FF; line-height: 1.6;">
                   • <strong>Corrections</strong>: Apply <code>X(q2)</code> if <code>c1=1</code>, <code>Z(q2)</code> if <code>c0=1</code><br>
-                  • <strong>Readout</strong>: Rotate <code>q2</code> to <code>Basis_i</code> & measure <code>c2</code><br>
+                  • <strong>Readout</strong>: Rotate <code>q2</code> to <code>Basis<sub>i</sub></code> &amp; measure <code>c2</code><br>
                   • <strong>Mismatch Check</strong>: Compare outcome to expected eigenvalue<br>
-                  • <strong>Decision</strong>: Reject if <code>P(K &ge; k | n, p0) &le; &alpha;</code>
+                  • <strong>Decision</strong>: Reject if <code>P(K &ge; k | n, p<sub>0</sub>) &le; &alpha;</code>
                 </div>
               </div>
             </div>
@@ -1328,6 +2166,9 @@ elif nav_section == "Hardware Validation":
     st.markdown("---")
     st.header("2. Target Quantum Backend & Simulator Selection")
 
+    if "hw_page_backend_category" not in st.session_state:
+        on_sidebar_exec_change()
+
     backend_category = st.radio(
         "Select Backend Category",
         options=[
@@ -1335,6 +2176,8 @@ elif nav_section == "Hardware Validation":
             "Physical IBM Quantum Hardware (Cloud QPU)",
             "Local Ideal Aer Simulator (Noiseless)",
         ],
+        key="hw_page_backend_category",
+        on_change=on_hw_page_backend_change,
         horizontal=True,
     )
 
@@ -1488,10 +2331,10 @@ elif nav_section == "Hardware Validation":
                 with col_action1:
                     job_url = f"https://quantum.ibm.com/jobs/{job_id_val}"
                     st.markdown(
-                        f'👉 <a href="{job_url}" target="_blank" style="color: #60A5FA; font-weight: bold;">Track Job {job_id_val} on IBM Quantum Cloud Dashboard</a>',
+                        f' <a href="{job_url}" target="_blank" style="color: #60A5FA; font-weight: bold;">Track Job {job_id_val} on IBM Quantum Cloud Dashboard</a>',
                         unsafe_allow_html=True,
                     )
-                    if st.button("🔄 Re-query IBM Cloud for Job Result", key="recheck_hw_job_btn"):
+                    if st.button(" Re-query IBM Cloud for Job Result", key="recheck_hw_job_btn"):
                         with st.spinner(f"Re-querying IBM Cloud for Job ID {job_id_val}..."):
                             refetched_res = fetch_ibm_job_result(
                                 job_id=job_id_val,
@@ -1506,7 +2349,7 @@ elif nav_section == "Hardware Validation":
                             st.rerun()
 
             with col_action2:
-                if st.button("⚡ Run Instant Offline Noise Sim (fake_fez)", key="fallback_fake_fez_btn"):
+                if st.button(" Run Instant Offline Noise Sim (fake_fez)", key="fallback_fake_fez_btn"):
                     with st.spinner("Executing 156-qubit Heron r2 realistic noise model locally..."):
                         noise_res = run_hardware_teleportation_experiment(
                             state_label=hw_state,
@@ -1547,7 +2390,7 @@ elif nav_section == "Hardware Validation":
         ax_hw_bar.set_xticks(x_indices)
         ax_hw_bar.set_xticklabels([f"|{out}⟩" for out in all_outcomes], color="#E9D5FF", fontsize=9)
         ax_hw_bar.set_ylabel("Readout Probability (%)", color="#E9D5FF", fontsize=9)
-        ax_hw_bar.set_title(f"Quantum Teleportation Measurement Distribution (|ψ_i⟩ = {hw_state}, Basis = {hw_basis})", color="#FF70A6", fontsize=10, fontweight="bold")
+        ax_hw_bar.set_title(f"Quantum Teleportation Measurement Distribution (|ψᵢ⟩ = {hw_state}, Basis = {hw_basis})", color="#FF70A6", fontsize=10, fontweight="bold")
         ax_hw_bar.tick_params(colors="#C084FC")
         ax_hw_bar.grid(True, linestyle="--", alpha=0.2, color="#A855F7")
         for spine in ax_hw_bar.spines.values():
@@ -1636,13 +2479,13 @@ elif nav_section == "Security Lab":
             "- Message M: UNKNOWN\n"
             "- SHA-256 Digest D: UNKNOWN\n"
             "- Secret Shared Key K: UNKNOWN\n"
-            "- Basis Schedule B_i: UNKNOWN"
+            "- Basis Schedule Bᵢ: UNKNOWN"
         )
 
         st.markdown('<div class="sec-header">C. ATTACKER ACTION</div>', unsafe_allow_html=True)
         st.markdown(
-            "For each transmitted signature qubit position i, Eve applies a Pauli-X gate on q2 with probability p_attack. "
-            "With probability (1 - p_attack), the qubit passes uncorrupted."
+            "For each transmitted signature qubit position i, Eve applies a Pauli-X gate on q2 with probability $p_{\\text{atk}}$. "
+            "With probability $(1 - p_{\\text{atk}})$, the qubit passes uncorrupted."
         )
 
         st.markdown('<div class="sec-header">D. QUANTUM STATE / BIT TRANSFORMATION</div>', unsafe_allow_html=True)
@@ -1666,7 +2509,7 @@ elif nav_section == "Security Lab":
             # Section F: Circuit Comparison
             st.markdown('<div class="sec-header">F. QUANTUM CIRCUIT / CIRCUIT DIFFERENCE</div>', unsafe_allow_html=True)
             st.markdown(
-                "Modified operation: Injected Pauli-X gate on q2 with probability p_attack before Bob's basis readout."
+                "Modified operation: Injected Pauli-X gate on q2 with probability $p_{\\text{atk}}$ before Bob's basis readout."
             )
             circ_c1, circ_c2 = st.columns(2)
             qc_norm_ch = build_demonstration_teleportation_circuit("|+>", "X", "none")
@@ -1730,8 +2573,8 @@ elif nav_section == "Security Lab":
         st.markdown(
             "- Message M: KNOWN\n"
             "- SHA-256 Digest D = SHA-256(M): KNOWN\n"
-            "- Basis Schedule B_i: KNOWN\n"
-            "- Secret Shared Key K: UNKNOWN (Eve assumes K'_i = 0)"
+            "- Basis Schedule Bᵢ: KNOWN\n"
+            "- Secret Shared Key K: UNKNOWN (Eve assumes K'ᵢ = 0)"
         )
 
         st.markdown('<div class="sec-header">C. ATTACKER ACTION</div>', unsafe_allow_html=True)
@@ -1808,7 +2651,7 @@ elif nav_section == "Security Lab":
             "- Message M: UNKNOWN\n"
             "- SHA-256 Digest D: UNKNOWN\n"
             "- Secret Shared Key K: UNKNOWN\n"
-            "- Basis Schedule B_i: KNOWN"
+            "- Basis Schedule Bᵢ: KNOWN"
         )
 
         st.markdown('<div class="sec-header">C. ATTACKER ACTION</div>', unsafe_allow_html=True)
@@ -1875,7 +2718,7 @@ elif nav_section == "Security Lab":
         st.markdown('<div class="sec-header">B. ATTACKER KNOWLEDGE</div>', unsafe_allow_html=True)
         st.markdown(
             "- Message M & Key K: UNKNOWN\n"
-            "- Alice Basis Schedule B_Alice: UNKNOWN (Eve guesses basis $B_{\\text{Eve}}$)"
+            "- Alice Basis Schedule $B_{\\text{Alice}}$: UNKNOWN (Eve guesses basis $B_{\\text{Eve}}$)"
         )
 
         st.markdown('<div class="sec-header">C. ATTACKER ACTION</div>', unsafe_allow_html=True)
@@ -1982,7 +2825,7 @@ elif nav_section == "Security Lab":
                 'When Eve replays a captured signature for the SAME message M, Bob\'s verification '
                 'produces ZERO errors. The current QDS prototype has no freshness mechanism: '
                 'no session nonce, no sequence counter, no timestamp, no challenge-response. '
-                'Because the encoding is fully deterministic (D = SHA-256(M), b_i = d_i XOR K_i), '
+                'Because the encoding is fully deterministic (D = SHA-256(M), bᵢ = dᵢ ⊕ Kᵢ), '
                 'a byte-for-byte replay of a valid signature for the same message is '
                 'INDISTINGUISHABLE from a fresh legitimate transmission.'
                 '</div>',
@@ -2068,11 +2911,30 @@ elif nav_section == "Analysis":
             "$P(K \\ge k \\mid n, p_0)$ and compares it to significance threshold $\\alpha$."
         )
 
+        if "main_ht_p0" not in st.session_state:
+            st.session_state["main_ht_p0"] = min(0.30, max(0.001, float(baseline_noise)))
+        if "main_ht_alpha" not in st.session_state:
+            st.session_state["main_ht_alpha"] = min(0.20, max(0.001, float(alpha)))
+
         int_c1, int_c2, int_c3, int_c4 = st.columns(4)
         ht_n = int_c1.number_input("Total Trials (n)", min_value=1, max_value=2560, value=256, step=1)
         ht_k = int_c2.number_input("Observed Errors (k)", min_value=0, max_value=2560, value=10, step=1)
-        ht_p0 = int_c3.slider("Baseline Error Rate (p0)", 0.001, 0.30, float(baseline_noise), 0.001)
-        ht_alpha = int_c4.slider("Significance Threshold (alpha)", 0.001, 0.20, float(alpha), 0.001)
+        ht_p0 = int_c3.slider(
+            "Baseline Error Rate (p0)",
+            min_value=0.001,
+            max_value=0.30,
+            step=0.005,
+            key="main_ht_p0",
+            on_change=on_main_p0_change,
+        )
+        ht_alpha = int_c4.slider(
+            "Significance Threshold (alpha)",
+            min_value=0.001,
+            max_value=0.20,
+            step=0.005,
+            key="main_ht_alpha",
+            on_change=on_main_alpha_change,
+        )
 
         ht_k = min(ht_k, ht_n)
         pval = binom.sf(ht_k - 1, ht_n, ht_p0)
@@ -2124,7 +2986,7 @@ elif nav_section == "Analysis":
             ):
                 ax_.set_facecolor('#0B0414')
                 ax_.plot(ps, obs_, "o-", color=color_, linewidth=2, markersize=6, label="Observed")
-                ax_.set_xlabel("p_attack", color="#E9D5FF")
+                ax_.set_xlabel(r"$p_{\mathrm{atk}}$", color="#E9D5FF")
                 ax_.set_title(label_, fontsize=10, color="#FF70A6", fontweight="bold")
                 ax_.grid(True, linestyle="--", alpha=0.2, color="#A855F7")
                 ax_.tick_params(colors="#C084FC")
@@ -2192,15 +3054,15 @@ elif nav_section == "Analysis":
                 {
                     "Attack": "Channel Tampering",
                     "What Eve Knows": "None",
-                    "What Eve Controls": "Pauli-X error probability p_attack on q2",
-                    "What Bob Observes": "Z/Y basis errors ~ p_attack; X invariant",
-                    "Why Detection Works": "Net error rate (2/3)p_attack exceeds p0",
+                    "What Eve Controls": "Pauli-X error probability pₐₜₖ on q2",
+                    "What Bob Observes": "Z/Y basis errors ~ pₐₜₖ; X invariant",
+                    "Why Detection Works": "Net error rate (2/3)pₐₜₖ exceeds p₀",
                 },
                 {
                     "Attack": "Signature Forgery",
                     "What Eve Knows": "Message M, SHA-256 Digest D",
                     "What Eve Controls": "Forged states prepared assuming K=0",
-                    "What Bob Observes": "Errors at positions where K_i = 1",
+                    "What Bob Observes": "Errors at positions where Kᵢ = 1",
                     "Why Detection Works": "Key 1-density (~50%) causes large error rate",
                 },
                 {
