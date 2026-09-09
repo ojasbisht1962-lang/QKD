@@ -2124,6 +2124,14 @@ elif nav_section == "Hardware Validation":
     st.markdown("---")
     st.header("2. Target Quantum Backend & Simulator Selection")
 
+    category_index = 0
+    if execution_backend_mode == "Local Aer Simulation (Ideal)":
+        category_index = 2
+    elif execution_backend_mode == "Real IBM Quantum Hardware (Physical QPU)":
+        category_index = 1
+    else:
+        category_index = 0
+
     backend_category = st.radio(
         "Select Backend Category",
         options=[
@@ -2131,6 +2139,7 @@ elif nav_section == "Hardware Validation":
             "Physical IBM Quantum Hardware (Cloud QPU)",
             "Local Ideal Aer Simulator (Noiseless)",
         ],
+        index=category_index,
         horizontal=True,
     )
 
