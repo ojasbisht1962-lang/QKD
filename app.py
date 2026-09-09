@@ -595,21 +595,40 @@ if "shared_key" not in st.session_state:
 
 shared_key: List[int] = st.session_state.shared_key
 
+if "global_p0" not in st.session_state:
+    st.session_state["global_p0"] = 0.02
+if "global_alpha" not in st.session_state:
+    st.session_state["global_alpha"] = 0.05
+
+def on_sidebar_p0_change():
+    st.session_state["main_ht_p0"] = min(0.30, max(0.001, float(st.session_state["global_p0"])))
+
+def on_sidebar_alpha_change():
+    st.session_state["main_ht_alpha"] = min(0.20, max(0.001, float(st.session_state["global_alpha"])))
+
+def on_main_p0_change():
+    st.session_state["global_p0"] = min(0.30, max(0.00, float(st.session_state["main_ht_p0"])))
+
+def on_main_alpha_change():
+    st.session_state["global_alpha"] = min(0.20, max(0.001, float(st.session_state["main_ht_alpha"])))
+
 baseline_noise = st.sidebar.slider(
     "Baseline Error Rate (p0)",
     min_value=0.00,
-    max_value=0.15,
-    value=0.02,
+    max_value=0.30,
     step=0.005,
+    key="global_p0",
+    on_change=on_sidebar_p0_change,
     help="Calibrated legitimate channel noise baseline error rate p0. This is an experimental parameter, NOT a universal constant.",
 )
 
 alpha = st.sidebar.slider(
     "Significance Threshold (alpha)",
     min_value=0.001,
-    max_value=0.10,
-    value=0.05,
+    max_value=0.20,
     step=0.005,
+    key="global_alpha",
+    on_change=on_sidebar_alpha_change,
 )
 
 shots_per_qubit = st.sidebar.selectbox(
@@ -2892,11 +2911,30 @@ elif nav_section == "Analysis":
             "$P(K \\ge k \\mid n, p_0)$ and compares it to significance threshold $\\alpha$."
         )
 
+        if "main_ht_p0" not in st.session_state:
+            st.session_state["main_ht_p0"] = min(0.30, max(0.001, float(baseline_noise)))
+        if "main_ht_alpha" not in st.session_state:
+            st.session_state["main_ht_alpha"] = min(0.20, max(0.001, float(alpha)))
+
         int_c1, int_c2, int_c3, int_c4 = st.columns(4)
         ht_n = int_c1.number_input("Total Trials (n)", min_value=1, max_value=2560, value=256, step=1)
         ht_k = int_c2.number_input("Observed Errors (k)", min_value=0, max_value=2560, value=10, step=1)
-        ht_p0 = int_c3.slider("Baseline Error Rate (p0)", 0.001, 0.30, float(baseline_noise), 0.001)
-        ht_alpha = int_c4.slider("Significance Threshold (alpha)", 0.001, 0.20, float(alpha), 0.001)
+        ht_p0 = int_c3.slider(
+            "Baseline Error Rate (p0)",
+            min_value=0.001,
+            max_value=0.30,
+            step=0.005,
+            key="main_ht_p0",
+            on_change=on_main_p0_change,
+        )
+        ht_alpha = int_c4.slider(
+            "Significance Threshold (alpha)",
+            min_value=0.001,
+            max_value=0.20,
+            step=0.005,
+            key="main_ht_alpha",
+            on_change=on_main_alpha_change,
+        )
 
         ht_k = min(ht_k, ht_n)
         pval = binom.sf(ht_k - 1, ht_n, ht_p0)
