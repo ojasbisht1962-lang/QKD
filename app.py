@@ -106,15 +106,208 @@ css_style_content = """
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
 
-    section[data-testid="stSidebar"] {
-        background-color: rgba(17, 7, 34, 0.94) !important;
-        backdrop-filter: blur(12px) !important;
-        -webkit-backdrop-filter: blur(12px) !important;
-        border-right: 1px solid rgba(236, 72, 153, 0.25) !important;
+    /* Header removal & top gap fix for both main page and sidebar */
+    header[data-testid="stHeader"],
+    [data-testid="stHeader"],
+    div[data-testid="stHeader"],
+    [data-testid="stSidebarHeader"],
+    div[data-testid="stSidebarHeader"],
+    [data-testid="stSidebarCollapseButton"],
+    div[data-testid="stSidebarNav"] {
+        display: none !important;
+        height: 0px !important;
+        min-height: 0px !important;
+        padding: 0px !important;
+        margin: 0px !important;
+        overflow: hidden !important;
     }
-    section[data-testid="stSidebar"] h2, section[data-testid="stSidebar"] h3 {
+
+    /* Eliminate top padding & margin on ALL sidebar container elements */
+    section[data-testid="stSidebar"],
+    [data-testid="stSidebar"],
+    [data-testid="stSidebarContent"],
+    [data-testid="stSidebarUserContent"],
+    section[data-testid="stSidebar"] > div,
+    section[data-testid="stSidebar"] > div:first-child,
+    section[data-testid="stSidebar"] .block-container,
+    div[data-testid="stSidebarUserContent"],
+    div[data-testid="stSidebarContent"] > div {
+        padding-top: 0.3rem !important;
+        margin-top: 0rem !important;
+    }
+
+    /* Main container top padding & margin reduction */
+    [data-testid="stMainBlockContainer"],
+    .main .block-container,
+    div[data-testid="stMainBlockContainer"] {
+        padding-top: 0.5rem !important;
+        padding-bottom: 2rem !important;
+        margin-top: 0rem !important;
+    }
+
+    /* Sidebar container styling */
+    section[data-testid="stSidebar"] {
+        background-color: rgba(17, 7, 34, 0.96) !important;
+        backdrop-filter: blur(14px) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
+        border-right: 1px solid rgba(236, 72, 153, 0.3) !important;
+    }
+
+    section[data-testid="stSidebar"] .block-container {
+        padding-left: 0.8rem !important;
+        padding-right: 0.8rem !important;
+        padding-bottom: 1.5rem !important;
+    }
+
+    /* Sidebar Header Typography & Compact Margins */
+    section[data-testid="stSidebar"] h2 {
+        color: #FF60B5 !important;
+        font-family: 'Outfit', sans-serif !important;
+        font-size: 1.5rem !important;
+        font-weight: 800 !important;
+        margin-top: 0.2rem !important;
+        margin-bottom: 0.2rem !important;
+        padding-bottom: 0 !important;
+        border-bottom: none !important;
+    }
+
+    section[data-testid="stSidebar"] h3 {
         color: #F472B6 !important;
         font-family: 'Outfit', sans-serif !important;
+        font-size: 1.25rem !important;
+        font-weight: 700 !important;
+        margin-top: 0.6rem !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    /* Compact Dividers in Sidebar */
+    section[data-testid="stSidebar"] hr {
+        margin: 8px 0 !important;
+        border-color: rgba(236, 72, 153, 0.3) !important;
+    }
+
+    /* ─── SIDEBAR RADIO SELECTION BUTTONS (HIGHLY VISIBLE PINK CARDS) ─── */
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"],
+    section[data-testid="stSidebar"] div[role="radiogroup"] {
+        gap: 6px !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    /* ALL Radio Option Cards (Unselected State) */
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label,
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-baseweb="radio"],
+    [data-testid="stSidebar"] div[role="radiogroup"] > label,
+    section[data-testid="stSidebar"] label[data-baseweb="radio"],
+    section[data-testid="stSidebar"] div[role="radiogroup"] label {
+        background: linear-gradient(135deg, rgba(236, 72, 153, 0.22) 0%, rgba(168, 85, 247, 0.18) 100%) !important;
+        border: 1.5px solid rgba(236, 72, 153, 0.5) !important;
+        border-radius: 10px !important;
+        padding: 10px 16px !important;
+        margin-bottom: 4px !important;
+        transition: all 0.2s ease-in-out !important;
+        width: 100% !important;
+        cursor: pointer !important;
+        display: flex !important;
+        align-items: center !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    /* Unselected Radio Text Styling */
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label *,
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-baseweb="radio"] *,
+    [data-testid="stSidebar"] div[role="radiogroup"] label *,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label p,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label span {
+        color: #F8E7FF !important;
+        font-family: 'Outfit', sans-serif !important;
+        font-size: 1.08rem !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.02em !important;
+        margin: 0 !important;
+    }
+
+    /* Radio Option Hover State */
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:hover,
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-baseweb="radio"]:hover,
+    [data-testid="stSidebar"] div[role="radiogroup"] > label:hover,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:hover {
+        background: linear-gradient(135deg, rgba(236, 72, 153, 0.45) 0%, rgba(168, 85, 247, 0.35) 100%) !important;
+        border-color: #FF60B5 !important;
+        box-shadow: 0 0 16px rgba(236, 72, 153, 0.5) !important;
+    }
+
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:hover *,
+    [data-testid="stSidebar"] div[role="radiogroup"] label:hover * {
+        color: #FFFFFF !important;
+    }
+
+    /* Active / Selected Radio Option Card State */
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label[data-checked="true"],
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked),
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-baseweb="radio"][aria-checked="true"],
+    [data-testid="stSidebar"] div[role="radiogroup"] > label[data-checked="true"],
+    [data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked),
+    section[data-testid="stSidebar"] div[role="radiogroup"] label[data-checked="true"] {
+        background: linear-gradient(135deg, #EC4899 0%, #D946EF 50%, #A855F7 100%) !important;
+        border: 2px solid #FF99D6 !important;
+        box-shadow: 0 0 22px rgba(236, 72, 153, 0.7) !important;
+    }
+
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label[data-checked="true"] *,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) *,
+    [data-testid="stSidebar"] div[role="radiogroup"] label[data-checked="true"] * {
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.6) !important;
+    }
+
+    /* Radio Circle Indicator Dot Styling */
+    [data-testid="stSidebar"] div[data-baseweb="radio"] > div:first-child {
+        border-color: #EC4899 !important;
+        border-width: 2px !important;
+        background-color: rgba(236, 72, 153, 0.3) !important;
+    }
+
+    [data-testid="stSidebar"] label[data-checked="true"] div[data-baseweb="radio"] > div:first-child,
+    [data-testid="stSidebar"] label:has(input:checked) div[data-baseweb="radio"] > div:first-child,
+    [data-testid="stSidebar"] label[data-baseweb="radio"][aria-checked="true"] div[data-baseweb="radio"] > div:first-child {
+        border-color: #FFFFFF !important;
+        background-color: #FFFFFF !important;
+    }
+
+    /* Sidebar Controls Text Sizes & Styling */
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p {
+        font-size: 1.0rem !important;
+        font-weight: 600 !important;
+        color: #F472B6 !important;
+        font-family: 'Outfit', sans-serif !important;
+        margin-bottom: 4px !important;
+    }
+
+    section[data-testid="stSidebar"] div[data-baseweb="select"] > div,
+    section[data-testid="stSidebar"] input {
+        font-size: 1.0rem !important;
+        font-weight: 500 !important;
+        background-color: rgba(26, 12, 46, 0.8) !important;
+        border: 1px solid rgba(236, 72, 153, 0.4) !important;
+        color: #F3E8FF !important;
+        border-radius: 8px !important;
+    }
+
+    section[data-testid="stSidebar"] [data-testid="stCaptionContainer"] p,
+    section[data-testid="stSidebar"] .stCaption {
+        font-size: 0.90rem !important;
+        color: #C084FC !important;
+        margin-top: 2px !important;
+    }
+
+    section[data-testid="stSidebar"] .stButton > button {
+        width: 100% !important;
+        font-size: 1.0rem !important;
+        padding: 8px 16px !important;
+        margin-top: 4px !important;
     }
 
     h1 {
@@ -278,32 +471,11 @@ css_style_content = """
         transform: translateY(-2px) scale(1.02) !important;
         box-shadow: 0 0 30px rgba(236, 72, 153, 0.65) !important;
     }
-
-    div[data-testid="stSidebar"] div[role="radiogroup"] > label {
-        background: rgba(26, 12, 46, 0.4) !important;
-        border: 1px solid rgba(236, 72, 153, 0.15) !important;
-        border-radius: 8px !important;
-        padding: 8px 14px !important;
-        margin-bottom: 6px !important;
-        transition: all 0.2s ease-in-out !important;
-        font-family: 'Outfit', sans-serif !important;
-        font-weight: 500 !important;
-        letter-spacing: 0.02em !important;
-    }
-    div[data-testid="stSidebar"] div[role="radiogroup"] > label:hover {
-        background: rgba(236, 72, 153, 0.15) !important;
-        border-color: rgba(236, 72, 153, 0.4) !important;
-        box-shadow: 0 0 12px rgba(236, 72, 153, 0.2) !important;
-    }
-    div[data-testid="stSidebar"] div[role="radiogroup"] > label[data-checked="true"] {
-        background: linear-gradient(90deg, rgba(236, 72, 153, 0.25), rgba(168, 85, 247, 0.2)) !important;
-        border-color: #EC4899 !important;
-        box-shadow: 0 0 15px rgba(236, 72, 153, 0.3) !important;
-    }
     </style>
 """
 
 st.markdown(css_style_content + f"<style>{bg_css_override}</style>", unsafe_allow_html=True)
+st.sidebar.markdown(css_style_content, unsafe_allow_html=True)
 
 # ─── Sidebar: Navigation + Global Configuration ───────────────────────────────
 st.sidebar.markdown("## QUANTUM DIGITAL SIGNATURE\n### Security Laboratory")
