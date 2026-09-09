@@ -498,6 +498,28 @@ nav_section = st.sidebar.radio(
 st.sidebar.markdown("---")
 st.sidebar.markdown("### EXECUTION ENGINE")
 
+# ─── Bi-directional Execution Backend State Synchronization ──────────────────
+if "sidebar_exec_mode" not in st.session_state:
+    st.session_state["sidebar_exec_mode"] = "Local Aer Simulation (Ideal)"
+
+def on_sidebar_exec_change():
+    mode = st.session_state.get("sidebar_exec_mode", "Local Aer Simulation (Ideal)")
+    if mode == "Local Aer Simulation (Ideal)":
+        st.session_state["hw_page_backend_category"] = "Local Ideal Aer Simulator (Noiseless)"
+    elif mode == "Real IBM Quantum Hardware (Physical QPU)":
+        st.session_state["hw_page_backend_category"] = "Physical IBM Quantum Hardware (Cloud QPU)"
+    else:
+        st.session_state["hw_page_backend_category"] = "IBM Realistic QPU Noise Simulators (Offline / Instant)"
+
+def on_hw_page_backend_change():
+    cat = st.session_state.get("hw_page_backend_category", "Local Ideal Aer Simulator (Noiseless)")
+    if cat == "Local Ideal Aer Simulator (Noiseless)":
+        st.session_state["sidebar_exec_mode"] = "Local Aer Simulation (Ideal)"
+    elif cat == "Physical IBM Quantum Hardware (Cloud QPU)":
+        st.session_state["sidebar_exec_mode"] = "Real IBM Quantum Hardware (Physical QPU)"
+    else:
+        st.session_state["sidebar_exec_mode"] = "IBM Quantum Realistic Noise Simulator"
+
 execution_backend_mode = st.sidebar.radio(
     "Execution Backend Mode",
     options=[
@@ -505,7 +527,8 @@ execution_backend_mode = st.sidebar.radio(
         "IBM Quantum Realistic Noise Simulator",
         "Real IBM Quantum Hardware (Physical QPU)",
     ],
-    index=0,
+    key="sidebar_exec_mode",
+    on_change=on_sidebar_exec_change,
 )
 
 # Configure active backend adapter based on selection
@@ -2124,13 +2147,8 @@ elif nav_section == "Hardware Validation":
     st.markdown("---")
     st.header("2. Target Quantum Backend & Simulator Selection")
 
-    category_index = 0
-    if execution_backend_mode == "Local Aer Simulation (Ideal)":
-        category_index = 2
-    elif execution_backend_mode == "Real IBM Quantum Hardware (Physical QPU)":
-        category_index = 1
-    else:
-        category_index = 0
+    if "hw_page_backend_category" not in st.session_state:
+        on_sidebar_exec_change()
 
     backend_category = st.radio(
         "Select Backend Category",
@@ -2139,7 +2157,8 @@ elif nav_section == "Hardware Validation":
             "Physical IBM Quantum Hardware (Cloud QPU)",
             "Local Ideal Aer Simulator (Noiseless)",
         ],
-        index=category_index,
+        key="hw_page_backend_category",
+        on_change=on_hw_page_backend_change,
         horizontal=True,
     )
 
